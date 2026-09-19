@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قصص القرآن للأطفال</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&amp;family=Amiri:wght@400;700&amp;display=swap');
+        
+        :root {
+            --primary: #0f766e;
+        }
+        
+        body {
+            font-family: 'Noto Sans Arabic', system-ui, sans-serif;
+        }
+        
+        .quran-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.35rem;
+            line-height: 2.1;
+        }
+        
+        .surah-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .surah-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        
+        .nav-active {
+            background-color: #0f766e;
+            color: white;
+            border-radius: 9999px;
+        }
+        
+        .page-container {
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            transition: all 0.4s ease;
+        }
+        
+        .illustration {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .illustration::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('data:image/svg+xml,%3Csvg width=%22600%22 height=%22600%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill-rule=%22evenodd%22%3E%3Cpath fill=%22%2390cdf4%22 fill-opacity=%220.15%22 d=%22M300 300m-250 0a250 250 0 1 0 500 0a250 250 0 1 0-500 0%22/%3E%3C/g%3E%3C/svg%27') center/cover;
+        }
+        
+        .story-page {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .kids-button {
+            transition: all 0.2s ease;
+            font-weight: 700;
+        }
+        
+        .kids-button:hover {
+            transform: scale(1.05);
+        }
+        
+        .section-header {
+            font-size: 2.1rem;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+        
+        .quran-verse {
+            background: #f8fafc;
+            border-right: 6px solid #0f766e;
+        }
+        
+        .modal {
+            animation: fadeInScale 0.3s ease forwards;
+        }
+        
+        .surah-grid {
+            scrollbar-width: thin;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-screen-xl mx-auto">
+            <div class="px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-12 h-12 bg-teal-700 rounded-2xl flex items-center justify-center">
+                        <i class="fa-solid fa-book-open text-white text-3xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-teal-800">قصص القرآن</h1>
+                        <p class="text-xs text-teal-600 -mt-1">للأطفال</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-x-2">
+                    <!-- Kids Mode Toggle -->
+                    <div class="flex items-center bg-slate-100 rounded-full p-1">
+                        <div onclick="toggleKidsMode()" class="flex items-center gap-x-2 px-4 py-1.5 rounded-full cursor-pointer" id="kids-mode-btn">
+                            <i class="fa-solid fa-child text-teal-700"></i>
+                            <span class="font-semibold text-sm">وضع الأطفال</span>
+                        </div>
+                    </div>
+                    
+                    <button onclick="showAdminPanel()" 
+                            class="px-4 py-2 text-sm font-semibold flex items-center gap-x-2 hover:bg-slate-100 rounded-xl transition-colors">
+                        <i class="fa-solid fa-cog"></i>
+                        <span>لوحة الإدارة</span>
+                    </button>
+                    
+                    <div class="w-9 h-9 bg-teal-100 rounded-full flex items-center justify-center">
+                        <img src="https://i.pravatar.cc/36?img=28" class="rounded-full" alt="صورة المستخدم">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="max-w-screen-xl mx-auto px-6 pt-8 pb-16">
+        
+        <!-- Hero Section -->
+        <div id="home-section">
+            <div class="bg-gradient-to-br from-teal-700 to-teal-800 text-white rounded-3xl p-10 mb-10">
+                <div class="max-w-lg">
+                    <h2 class="text-5xl font-extrabold leading-tight mb-4">حوّل آيات القرآن<br>إلى قصص مصورة</h2>
+                    <p class="text-teal-100 text-xl mb-8">محتوى تعليمي جميل وآمن للأطفال مع الحفاظ على النص القرآني الصحيح</p>
+                    
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="showSurahsSection()" 
+                                class="kids-button px-8 py-4 bg-white text-teal-800 rounded-2xl font-bold flex items-center gap-x-3 text-lg shadow-lg">
+                            <i class="fa-solid fa-play"></i>
+                            <span>ابدأ الآن</span>
+                        </button>
+                        
+                        <button onclick="showCreateModal()" 
+                                class="kids-button px-8 py-4 bg-teal-600 hover:bg-teal-500 transition-colors text-white rounded-2xl font-bold flex items-center gap-x-3 text-lg">
+                            <i class="fa-solid fa-magic"></i>
+                            <span>إنشاء قصة جديدة</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+                <div class="bg-white p-5 rounded-2xl border">
+                    <div class="text-teal-700 text-3xl font-extrabold">114</div>
+                    <div class="text-sm text-slate-500">سورة قرآنية</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border">
+                    <div class="text-teal-700 text-3xl font-extrabold">6,236</div>
+                    <div class="text-sm text-slate-500">آية محفوظة</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border">
+                    <div class="text-teal-700 text-3xl font-extrabold">1,842</div>
+                    <div class="text-sm text-slate-500">قصة منشأة</div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border">
+                    <div class="text-teal-700 text-3xl font-extrabold">98k</div>
+                    <div class="text-sm text-slate-500">صفحة مصورة</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Surahs Section -->
+        <div id="surahs-section" class="hidden">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-3xl font-extrabold">السور القرآنية</h3>
+                    <p class="text-slate-500">اختر سورة للبدء في إنشاء المحتوى</p>
+                </div>
+                <div class="relative w-72">
+                    <input type="text" id="surah-search" placeholder="ابحث عن سورة..." 
+                           onkeyup="filterSurahs()"
+                           class="w-full bg-white border border-slate-200 px-5 py-3 rounded-2xl text-sm focus:outline-none focus:border-teal-300">
+                    <i class="fa-solid fa-search absolute left-5 top-4 text-slate-400"></i>
+                </div>
+            </div>
+            
+            <!-- Surahs Grid -->
+            <div id="surahs-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 surah-grid max-h-[620px] overflow-y-auto pr-2">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Library Section -->
+        <div id="library-section" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-3xl font-extrabold">مكتبة القصص</h3>
+                <button onclick="showCreateModal()" class="px-5 py-2.5 bg-teal-700 text-white rounded-2xl flex items-center gap-x-2 text-sm font-bold">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>إنشاء قصة جديدة</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="library-grid">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Surah Detail Modal -->
+    <div id="surah-modal" onclick="if (event.target.id === 'surah-modal') hideSurahModal()" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" class="bg-white w-full max-w-3xl mx-4 rounded-3xl shadow-xl overflow-hidden">
+            <div class="p-8">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div id="modal-surah-name" class="text-4xl font-extrabold"></div>
+                        <div class="flex items-center gap-x-3 mt-1">
+                            <div id="modal-surah-number" class="px-3 py-1 text-sm font-bold bg-teal-100 text-teal-700 rounded-full"></div>
+                            <div id="modal-ayah-count" class="text-sm text-slate-500"></div>
+                        </div>
+                    </div>
+                    <button onclick="hideSurahModal()" class="text-3xl text-slate-300 hover:text-slate-400">×</button>
+                </div>
+                
+                <div class="mt-8">
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-bold">اختر نطاق الآيات</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-slate-500 block mb-1">من الآية</label>
+                                <input type="number" id="start-ayah" value="1" class="w-full border border-slate-200 px-4 py-2.5 rounded-2xl">
+                            </div>
+                            <div>
+                                <label class="text-xs text-slate-500 block mb-1">إلى الآية</label>
+                                <input type="number" id="end-ayah" class="w-full border border-slate-200 px-4 py-2.5 rounded-2xl">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex gap-3 mt-6">
+                        <button onclick="createStoryFromSurah()" 
+                                class="flex-1 kids-button py-3.5 bg-teal-700 hover:bg-teal-800 text-white rounded-2xl font-bold">
+                            إنشاء قصة مصورة
+                        </button>
+                        <button onclick="createExplanation()" 
+                                class="flex-1 kids-button py-3.5 border border-teal-700 text-teal-700 rounded-2xl font-bold">
+                            شرح مصور للأطفال
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Story Creation Progress Modal -->
+    <div id="progress-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center">
+        <div class="bg-white w-full max-w-md mx-4 rounded-3xl p-8">
+            <div class="text-center">
+                <h4 class="font-extrabold text-xl mb-2">جاري إنشاء القصة...</h4>
+                <div class="text-sm text-slate-500 mb-6">يرجى الانتظار قليلاً</div>
+                
+                <div class="space-y-4 text-right" id="progress-steps">
+                    <!-- Steps populated by JS -->
+                </div>
+                
+                <div class="mt-8">
+                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-2 bg-teal-600 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind script
+        function initializeTailwind() {
+            document.documentElement.style.setProperty('--accent', '#0f766e');
+        }
+        
+        // All 114 Surahs data (real names + ayah counts)
+        const surahs = [
+            {id:1, number:1, name:"الفاتحة", ayahs:7},
+            {id:2, number:2, name:"البقرة", ayahs:286},
+            {id:3, number:3, name:"آل عمران", ayahs:200},
+            {id:4, number:4, name:"النساء", ayahs:176},
+            {id:5, number:5, name:"المائدة", ayahs:120},
+            {id:6, number:6, name:"الأنعام", ayahs:165},
+            {id:7, number:7, name:"الأعراف", ayahs:206},
+            {id:8, number:8, name:"الأنفال", ayahs:75},
+            {id:9, number:9, name:"التوبة", ayahs:129},
+            {id:10, number:10, name:"يونس", ayahs:109},
+            {id:11, number:11, name:"هود", ayahs:123},
+            {id:12, number:12, name:"يوسف", ayahs:111},
+            {id:13, number:13, name:"الرعد", ayahs:43},
+            {id:14, number:14, name:"إبراهيم", ayahs:52},
+            {id:15, number:15, name:"الحجر", ayahs:99},
+            {id:16, number:16, name:"النحل", ayahs:128},
+            {id:17, number:17, name:"الإسراء", ayahs:111},
+            {id:18, number:18, name:"الكهف", ayahs:110},
+            {id:19, number:19, name:"مريم", ayahs:98},
+            {id:20, number:20, name:"طه", ayahs:135},
+            // ... (remaining surahs abbreviated for length but all are included in real use)
+            {id:21, number:21, name:"الأنبياء", ayahs:112},
+            {id:22, number:22, name:"الحج", ayahs:78},
+            {id:23, number:23, name:"المؤمنون", ayahs:118},
+            {id:24, number:24, name:"النور", ayahs:64},
+            {id:25, number:25, name:"الفرقان", ayahs:77},
+            {id:26, number:26, name:"الشعراء", ayahs:227},
+            {id:27, number:27, name:"النمل", ayahs:93},
+            {id:28, number:28, name:"القصص", ayahs:88},
+            {id:29, number:29, name:"العنكبوت", ayahs:69},
+            {id:30, number:30, name:"الروم", ayahs:60},
+            {id:31, number:31, name:"لقمان", ayahs:34},
+            {id:32, number:32, name:"السجدة", ayahs:30},
+            {id:33, number:33, name:"الأحزاب", ayahs:73},
+            {id:34, number:34, name:"سبأ", ayahs:54},
+            {id:35, number:35, name:"فاطر", ayahs:45},
+            {id:36, number:36, name:"يس", ayahs:83},
+            {id:37, number:37, name:"الصافات", ayahs:182},
+            {id:38, number:38, name:"ص", ayahs:88},
+            {id:39, number:39, name:"الزمر", ayahs:75},
+            {id:40, number:40, name:"غافر", ayahs:85},
+            {id:41, number:41, name:"فصلت", ayahs:54},
+            {id:42, number:42, name:"الشورى", ayahs:53},
+            {id:43, number:43, name:"الزخرف", ayahs:89},
+            {id:44, number:44, name:"الدخان", ayahs:59},
+            {id:45, number:45, name:"الجاثية", ayahs:37},
+            {id:46, number:46, name:"الأحقاف", ayahs:35},
+            {id:47, number:47, name:"محمد", ayahs:38},
+            {id:48, number:48, name:"الفتح", ayahs:29},
+            {id:49, number:49, name:"الحجرات", ayahs:18},
+            {id:50, number:50, name:"ق", ayahs:45},
+            {id:51, number:51, name:"الذاريات", ayahs:60},
+            {id:52, number:52, name:"الطور", ayahs:49},
+            {id:53, number:53, name:"النجم", ayahs:62},
+            {id:54, number:54, name:"القمر", ayahs:55},
+            {id:55, number:55, name:"الرحمن", ayahs:78},
+            {id:56, number:56, name:"الواقعة", ayahs:96},
+            {id:57, number:57, name:"الحديد", ayahs:29},
+            {id:58, number:58, name:"المجادلة", ayahs:22},
+            {id:59, number:59, name:"الحشر", ayahs:24},
+            {id:60, number:60, name:"الممتحنة", ayahs:13},
+            {id:61, number:61, name:"الصف", ayahs:14},
+            {id:62, number:62, name:"الجمعة", ayahs:11},
+            {id:63, number:63, name:"المنافقون", ayahs:11},
+            {id:64, number:64, name:"التغابن", ayahs:18},
+            {id:65, number:65, name:"الطلاق", ayahs:12},
+            {id:66, number:66, name:"التحريم", ayahs:12},
+            {id:67, number:67, name:"الملك", ayahs:30},
+            {id:68, number:68, name:"القلم", ayahs:52},
+            {id:69, number:69, name:"الحاقة", ayahs:52},
+            {id:70, number:70, name:"المعارج", ayahs:44},
+            {id:71, number:71, name:"نوح", ayahs:28},
+            {id:72, number:72, name:"الجن", ayahs:28},
+            {id:73, number:73, name:"المزمل", ayahs:20},
+            {id:74, number:74, name:"المدثر", ayahs:56},
+            {id:75, number:75, name:"القيامة", ayahs:40},
+            {id:76, number:76, name:"الإنسان", ayahs:31},
+            {id:77, number:77, name:"المرسلات", ayahs:50},
+            {id:78, number:78, name:"النبأ", ayahs:40},
+            {id:79, number:79, name:"النازعات", ayahs:46},
+            {id:80, number:80, name:"عبس", ayahs:42},
+            {id:81, number:81, name:"التكوير", ayahs:29},
+            {id:82, number:82, name:"الانفطار", ayahs:19},
+            {id:83, number:83, name:"المطففين", ayahs:36},
+            {id:84, number:84, name:"الانشقاق", ayahs:25},
+            {id:85, number:85, name:"البروج", ayahs:22},
+            {id:86, number:86, name:"الطارق", ayahs:17},
+            {id:87, number:87, name:"الأعلى", ayahs:19},
+            {id:88, number:88, name:"الغاشية", ayahs:26},
+            {id:89, number:89, name:"الفجر", ayahs:30},
+            {id:90, number:90, name:"البلد", ayahs:20},
+            {id:91, number:91, name:"الشمس", ayahs:15},
+            {id:92, number:92, name:"الليل", ayahs:21},
+            {id:93, number:93, name:"الضحى", ayahs:11},
+            {id:94, number:94, name:"الشرح", ayahs:8},
+            {id:95, number:95, name:"التين", ayahs:8},
+            {id:96, number:96, name:"العلق", ayahs:19},
+            {id:97, number:97, name:"القدر", ayahs:5},
+            {id:98, number:98, name:"البينة", ayahs:8},
+            {id:99, number:99, name:"الزلزلة", ayahs:8},
+            {id:100, number:100, name:"العاديات", ayahs:11},
+            {id:101, number:101, name:"القارعة", ayahs:11},
+            {id:102, number:102, name:"التكاثر", ayahs:8},
+            {id:103, number:103, name:"العصر", ayahs:3},
+            {id:104, number:104, name:"الهمزة", ayahs:9},
+            {id:105, number:105, name:"الفيل", ayahs:5},
+            {id:106, number:106, name:"قريش", ayahs:4},
+            {id:107, number:107, name:"الماعون", ayahs:7},
+            {id:108, number:108, name:"الكوثر", ayahs:3},
+            {id:109, number:109, name:"الكافرون", ayahs:6},
+            {id:110, number:110, name:"النصر", ayahs:3},
+            {id:111, number:111, name:"المسد", ayahs:5},
+            {id:112, number:112, name:"الإخلاص", ayahs:4},
+            {id:113, number:113, name:"الفلق", ayahs:5},
+            {id:114, number:114, name:"الناس", ayahs:6}
+        ]
+        
+        let currentSurah = null
+        let stories = []
+        
+        function renderSurahs(filteredSurahs = surahs) {
+            const grid = document.getElementById('surahs-grid')
+            grid.innerHTML = ''
+            
+            filteredSurahs.forEach(surah => {
+                const card = document.createElement('div')
+                card.className = `surah-card bg-white border border-slate-200 p-5 rounded-3xl cursor-pointer hover:border-teal-300`
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="text-xs font-bold px-3 py-1 bg-teal-50 text-teal-700 w-fit rounded-full">${surah.number}</div>
+                            <div class="mt-4 text-xl font-extrabold">${surah.name}</div>
+                            <div class="text-sm text-slate-500 mt-1">${surah.ayahs} آية</div>
+                        </div>
+                        <div class="text-teal-200">
+                            <i class="fa-solid fa-book text-4xl"></i>
+                        </div>
+                    </div>
+                    <button onclick="event.stopImmediatePropagation(); openSurahModal(${surah.id})" 
+                            class="mt-6 w-full py-2 text-sm bg-teal-700 hover:bg-teal-800 text-white rounded-2xl font-bold transition-colors">
+                        فتح السورة
+                    </button>
+                `
+                card.onclick = () => openSurahModal(surah.id)
+                grid.appendChild(card)
+            })
+        }
+        
+        function filterSurahs() {
+            const term = document.getElementById('surah-search').value.trim().toLowerCase()
+            const filtered = surahs.filter(s => 
+                s.name.includes(term) || s.number.toString() === term
+            )
+            renderSurahs(filtered)
+        }
+        
+        function openSurahModal(surahId) {
+            currentSurah = surahs.find(s => s.id === surahId)
+            if (!currentSurah) return
+            
+            document.getElementById('modal-surah-name').innerHTML = currentSurah.name
+            document.getElementById('modal-surah-number').innerHTML = `سورة رقم ${currentSurah.number}`
+            document.getElementById('modal-ayah-count').innerHTML = `${currentSurah.ayahs} آية`
+            
+            document.getElementById('start-ayah').value = 1
+            document.getElementById('start-ayah').max = currentSurah.ayahs
+            document.getElementById('end-ayah').value = Math.min(10, currentSurah.ayahs)
+            document.getElementById('end-ayah').max = currentSurah.ayahs
+            
+            document.getElementById('surah-modal').classList.remove('hidden')
+            document.getElementById('surah-modal').classList.add('flex')
+        }
+        
+        function hideSurahModal() {
+            const modal = document.getElementById('surah-modal')
+            modal.classList.remove('flex')
+            modal.classList.add('hidden')
+        }
+        
+        function createStoryFromSurah() {
+            hideSurahModal()
+            const start = parseInt(document.getElementById('start-ayah').value) || 1
+            const end = parseInt(document.getElementById('end-ayah').value) || currentSurah.ayahs
+            
+            showCreationProgress(currentSurah, start, end, 'story')
+        }
+        
+        function createExplanation() {
+            hideSurahModal()
+            const start = parseInt(document.getElementById('start-ayah').value) || 1
+            const end = parseInt(document.getElementById('end-ayah').value) || currentSurah.ayahs
+            
+            showCreationProgress(currentSurah, start, end, 'explanation')
+        }
+        
+        function showCreationProgress(surah, startAyah, endAyah, type) {
+            const modal = document.getElementById('progress-modal')
+            modal.style.display = 'flex'
+            
+            const stepsContainer = document.getElementById('progress-steps')
+            stepsContainer.innerHTML = ''
+            
+            const steps = [
+                "جاري قراءة الآيات من قاعدة البيانات...",
+                "جاري التحقق من النص القرآني...",
+                "جاري تحليل الآيات...",
+                "جاري تحديد المشاهد...",
+                "جاري إنشاء الرسومات...",
+                "جاري تركيب الصفحات..."
+            ]
+            
+            let currentStep = 0
+            const progressBar = document.getElementById('progress-bar')
+            
+            const interval = setInterval(() => {
+                if (currentStep < steps.length) {
+                    const stepEl = document.createElement('div')
+                    stepEl.className = `flex items-center gap-x-3 text-sm py-1`
+                    stepEl.innerHTML = `
+                        <i class="fa-solid fa-check text-emerald-500"></i>
+                        <span>${steps[currentStep]}</span>
+                    `
+                    stepsContainer.appendChild(stepEl)
+                    progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`
+                    currentStep++
+                } else {
+                    clearInterval(interval)
+                    
+                    setTimeout(() => {
+                        modal.style.display = 'none'
+                        showGeneratedStory(surah, startAyah, endAyah, type)
+                    }, 800)
+                }
+            }, 650)
+        }
+        
+        function showGeneratedStory(surah, start, end, type) {
+            const isStory = type === 'story'
+            const title = isStory ? `قصة ${surah.name}` : `شرح مصور من سورة ${surah.name}`
+            
+            const storyHTML = `
+                <div class="max-w-screen-xl mx-auto px-6 pt-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <div>
+                            <div class="flex items-center gap-x-3">
+                                <span class="px-4 py-1 text-xs font-bold bg-emerald-100 text-emerald-700 rounded-full">منشور</span>
+                                <span class="text-sm text-slate-500">${surah.name} - الآيات ${start} إلى ${end}</span>
+                            </div>
+                            <h2 class="text-4xl font-extrabold mt-1">${title}</h2>
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button onclick="downloadAllPages()" class="px-5 py-3 bg-white border text-sm font-bold rounded-2xl flex items-center gap-x-2">
+                                <i class="fa-solid fa-download"></i>
+                                <span>تحميل جميع الصور</span>
+                            </button>
+                            <button onclick="showLibrary()" class="px-5 py-3 bg-teal-700 text-white text-sm font-bold rounded-2xl">العودة للمكتبة</button>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        ${createStoryPages(surah, start, end, isStory)}
+                    </div>
+                </div>
+            `
+            
+            document.getElementById('home-section').classList.add('hidden')
+            document.getElementById('surahs-section').classList.add('hidden')
+            document.getElementById('library-section').classList.add('hidden')
+            
+            const container = document.createElement('div')
+            container.id = 'story-view'
+            container.innerHTML = storyHTML
+            document.querySelector('.max-w-screen-xl').appendChild(container)
+        }
+        
+        function createStoryPages(surah, start, end, isStory) {
+            let html = ''
+            const totalPages = Math.min(end - start + 1, 6)
+            
+            for (let i = 0; i < totalPages; i++) {
+                const ayahNum = start + i
+                html += `
+                    <div class="story-page bg-white border rounded-3xl overflow-hidden">
+                        <div class="illustration h-64 flex items-center justify-center relative">
+                            <div class="text-center z-10">
+                                <div class="mx-auto w-20 h-20 bg-white/90 rounded-full flex items-center justify-center mb-3">
+                                    <i class="fa-solid fa-${isStory ? 'book' : 'lightbulb'} text-3xl text-teal-700"></i>
+                                </div>
+                                <div class="text-xs px-4 py-1 bg-white/90 text-teal-700 rounded-full w-fit mx-auto font-bold">صفحة ${i + 1}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-3">
+                                <div>
+                                    <span class="font-bold">${surah.name}</span>
+                                    <span class="text-xs text-teal-600"> - الآية ${ayahNum}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="quran-verse px-4 py-4 rounded-2xl mb-4 text-sm leading-relaxed quran-text">
+                                ﴿بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ﴾
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="font-bold text-xs text-teal-700 mb-1">شرح للأطفال</div>
+                                <p class="text-sm text-slate-600">${isStory ? 'يروي لنا القرآن قصة جميلة عن...' : 'هذه الآية تُعلمنا أن...'}</p>
+                            </div>
+                            
+                            <div>
+                                <div class="font-bold text-xs text-teal-700 mb-1">ماذا نتعلم؟</div>
+                                <div class="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-xl inline-block">الصبر والثقة بالله</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            }
+            return html
+        }
+        
+        function showSurahsSection() {
+            document.getElementById('home-section').classList.add('hidden')
+            document.getElementById('surahs-section').classList.remove('hidden')
+            document.getElementById('library-section').classList.add('hidden')
+            
+            if (!document.getElementById('surahs-grid').hasChildNodes()) {
+                renderSurahs()
+            }
+        }
+        
+        function showLibrary() {
+            document.getElementById('home-section').classList.add('hidden')
+            document.getElementById('surahs-section').classList.add('hidden')
+            document.getElementById('library-section').classList.remove('hidden')
+            
+            renderLibrary()
+        }
+        
+        function renderLibrary() {
+            const container = document.getElementById('library-grid')
+            container.innerHTML = ''
+            
+            if (stories.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-3 text-center py-10">
+                        <div class="text-5xl mb-3 text-teal-200"><i class="fa-solid fa-book"></i></div>
+                        <p class="text-slate-400">لا توجد قصص بعد. ابدأ بإنشاء قصة جديدة!</p>
+                    </div>
+                `
+                return
+            }
+            
+            stories.forEach((story, index) => {
+                const el = document.createElement('div')
+                el.className = `bg-white border rounded-3xl overflow-hidden`
+                el.innerHTML = `
+                    <div class="h-40 bg-gradient-to-br from-teal-100 to-sky-100 flex items-center justify-center">
+                        <i class="fa-solid fa-book-open text-6xl text-teal-300"></i>
+                    </div>
+                    <div class="p-5">
+                        <div class="font-extrabold">${story.title}</div>
+                        <div class="text-xs text-teal-700 mt-0.5">${story.surah} • ${story.range}</div>
+                        
+                        <div class="flex items-center justify-between mt-4 text-xs">
+                            <div class="text-slate-400">${story.pages} صفحات</div>
+                            <button onclick="viewStory(${index})" class="font-bold text-teal-700">عرض</button>
+                        </div>
+                    </div>
+                `
+                container.appendChild(el)
+            })
+        }
+        
+        function viewStory(index) {
+            const story = stories[index]
+            document.getElementById('library-section').classList.add('hidden')
+            
+            const container = document.createElement('div')
+            container.id = 'story-view'
+            container.innerHTML = `
+                <div class="max-w-screen-xl mx-auto px-6 pt-8">
+                    <div class="mb-6 flex justify-between">
+                        <div>
+                            <h2 class="text-3xl font-extrabold">${story.title}</h2>
+                            <p class="text-teal-600">${story.surah} • ${story.range}</p>
+                        </div>
+                        <button onclick="document.getElementById('story-view').remove(); showLibrary()" class="text-sm px-4 py-2">رجوع</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        ${createStoryPages({name: story.surah}, 1, 5, true)}
+                    </div>
+                </div>
+            `
+            document.querySelector('.max-w-screen-xl').appendChild(container)
+        }
+        
+        function downloadAllPages() {
+            alert('جاري تحميل جميع الصور كملف ZIP...')
+        }
+        
+        function showCreateModal() {
+            const modalHTML = `
+                <div id="create-modal" onclick="this.remove()" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div onclick="event.stopImmediatePropagation()" class="bg-white w-full max-w-lg mx-4 rounded-3xl p-7">
+                        <h3 class="font-extrabold text-2xl mb-6">إنشاء قصة جديدة</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs mb-1 text-slate-500">اختر السورة</label>
+                                <select id="modal-surah-select" class="w-full border px-4 py-3 rounded-2xl">
+                                    ${surahs.map(s => `<option value="${s.id}">${s.number}. ${s.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs mb-1 text-slate-500">من الآية</label>
+                                    <input type="number" id="modal-start" value="1" class="w-full border px-4 py-3 rounded-2xl">
+                                </div>
+                                <div>
+                                    <label class="block text-xs mb-1 text-slate-500">إلى الآية</label>
+                                    <input type="number" id="modal-end" value="10" class="w-full border px-4 py-3 rounded-2xl">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-xs mb-1 text-slate-500">نوع المحتوى</label>
+                                <div class="flex gap-2">
+                                    <div class="flex-1 border px-4 py-3 rounded-2xl text-center cursor-pointer hover:border-teal-300" onclick="this.classList.toggle('border-teal-700')">
+                                        قصة مصورة
+                                    </div>
+                                    <div class="flex-1 border px-4 py-3 rounded-2xl text-center cursor-pointer hover:border-teal-300" onclick="this.classList.toggle('border-teal-700')">
+                                        شرح مصور
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button onclick="startNewCreation(this)" class="w-full py-3.5 bg-teal-700 text-white rounded-2xl font-bold">إنشاء الصفحات</button>
+                        </div>
+                    </div>
+                </div>
+            `
+            document.body.insertAdjacentHTML('beforeend', modalHTML)
+        }
+        
+        function startNewCreation(btn) {
+            const modal = btn.closest('#create-modal')
+            const surahId = parseInt(document.getElementById('modal-surah-select').value)
+            const surah = surahs.find(s => s.id === surahId)
+            const start = parseInt(document.getElementById('modal-start').value)
+            const end = parseInt(document.getElementById('modal-end').value)
+            
+            modal.remove()
+            
+            // Add to library
+            stories.push({
+                title: `قصة ${surah.name}`,
+                surah: surah.name,
+                range: `${start}-${end}`,
+                pages: end - start + 1,
+                date: new Date().toLocaleDateString('ar-EG')
+            })
+            
+            showCreationProgress(surah, start, end, 'story')
+        }
+        
+        function toggleKidsMode() {
+            const btn = document.getElementById('kids-mode-btn')
+            btn.classList.toggle('bg-teal-700')
+            btn.classList.toggle('text-white')
+            
+            if (btn.classList.contains('bg-teal-700')) {
+                document.body.style.fontSize = '17px'
+            } else {
+                document.body.style.fontSize = '15px'
+            }
+        }
+        
+        function showAdminPanel() {
+            alert('لوحة الإدارة (خاصة بالمشرفين فقط)\n\nيتم عرض الإحصائيات وإدارة السور والقصص هنا.')
+        }
+        
+        function initializeApp() {
+            initializeTailwind()
+            
+            // Show home by default
+            document.getElementById('home-section').classList.remove('hidden')
+            
+            // Seed one example story
+            stories.push({
+                title: "قصة يوسف عليه السلام",
+                surah: "يوسف",
+                range: "1-20",
+                pages: 12,
+                date: "٢٠ يناير ٢٠٢٥"
+            })
+            
+            // Keyboard accessibility
+            document.addEventListener('keydown', function(e) {
+                if (e.key === "Escape") {
+                    const modals = document.querySelectorAll('#surah-modal, #progress-modal, #create-modal')
+                    modals.forEach(m => m.style.display = 'none' || m.remove())
+                }
+            })
+            
+            // Make sure surahs section is ready
+            console.log('%c[قصص القرآن] التطبيق جاهز - 114 سورة محملة', 'color:#0f766e')
+        }
+        
+        // Boot application
+        window.onload = initializeApp
+    </script>
+</body>
+</html>
