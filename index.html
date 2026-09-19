@@ -1,807 +1,2627 @@
-<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قصص القرآن للأطفال</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;700&amp;family=Amiri:wght@400;700&amp;display=swap');
-        
-        :root {
-            --primary: #0f766e;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قصص القرآن للأطفال - حوّل آيات القرآن إلى صفحات مصورة تعليمية</title>
+<meta name="description" content="تطبيق عربي احترافي لتحويل آيات القرآن الكريم إلى صفحات مصورة تعليمية للأطفال بطريقة مبسطة وجذابة مع المحافظة على النص القرآني الصحيح.">
+<meta name="keywords" content="قصص القرآن, أطفال, قصص الأنبياء, تعليم قرآني, سورة يوسف, الفاتحة, آيات مصورة">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          'cairo': ['Cairo', 'sans-serif'],
+          'amiri': ['Amiri', 'serif'],
+          'quran': ['Scheherazade New', 'serif'],
+        },
+        colors: {
+          'brand': {
+            50: '#f0fdf4',
+            100: '#dcfce7',
+            200: '#bbf7d0',
+            300: '#86efac',
+            400: '#4ade80',
+            500: '#22c55e',
+            600: '#16a34a',
+            700: '#15803d',
+            800: '#166534',
+            900: '#14532d',
+          },
+          'sky-brand': {
+            50: '#f0f9ff',
+            100: '#e0f2fe',
+            500: '#0ea5e9',
+            600: '#0284c7',
+            700: '#0369a1',
+          },
+          'gold': {
+            400: '#facc15',
+            500: '#eab308',
+            600: '#ca8a04',
+          }
         }
-        
-        body {
-            font-family: 'Noto Sans Arabic', system-ui, sans-serif;
-        }
-        
-        .quran-text {
-            font-family: 'Amiri', serif;
-            font-size: 1.35rem;
-            line-height: 2.1;
-        }
-        
-        .surah-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .surah-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
-        
-        .nav-active {
-            background-color: #0f766e;
-            color: white;
-            border-radius: 9999px;
-        }
-        
-        .page-container {
-            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-            transition: all 0.4s ease;
-        }
-        
-        .illustration {
-            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .illustration::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: url('data:image/svg+xml,%3Csvg width=%22600%22 height=%22600%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cg fill-rule=%22evenodd%22%3E%3Cpath fill=%22%2390cdf4%22 fill-opacity=%220.15%22 d=%22M300 300m-250 0a250 250 0 1 0 500 0a250 250 0 1 0-500 0%22/%3E%3C/g%3E%3C/svg%27') center/cover;
-        }
-        
-        .story-page {
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .kids-button {
-            transition: all 0.2s ease;
-            font-weight: 700;
-        }
-        
-        .kids-button:hover {
-            transform: scale(1.05);
-        }
-        
-        .section-header {
-            font-size: 2.1rem;
-            line-height: 1.1;
-            font-weight: 800;
-        }
-        
-        .quran-verse {
-            background: #f8fafc;
-            border-right: 6px solid #0f766e;
-        }
-        
-        .modal {
-            animation: fadeInScale 0.3s ease forwards;
-        }
-        
-        .surah-grid {
-            scrollbar-width: thin;
-        }
-    </style>
+      }
+    }
+  }
+</script>
+<style>
+  * { font-family: 'Cairo', sans-serif; }
+  body {
+    background: linear-gradient(135deg, #f0fdf4 0%, #e0f2fe 50%, #fef3c7 100%);
+    min-height: 100vh;
+  }
+  .font-quran { font-family: 'Scheherazade New', serif; }
+  .font-amiri { font-family: 'Amiri', serif; }
+  
+  .pattern-bg {
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(14, 165, 233, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(234, 179, 8, 0.05) 0%, transparent 50%);
+  }
+  
+  .islamic-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cpath d='M40 0 L80 40 L40 80 L0 40 Z' fill='none' stroke='%2322c55e' stroke-width='0.5' opacity='0.15'/%3E%3Ccircle cx='40' cy='40' r='15' fill='none' stroke='%2322c55e' stroke-width='0.5' opacity='0.15'/%3E%3C/svg%3E");
+    background-size: 80px 80px;
+  }
+  
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(34, 197, 94, 0.25);
+  }
+  
+  .btn-primary {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(34, 197, 94, 0.4);
+  }
+  
+  .btn-secondary {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    transition: all 0.3s ease;
+  }
+  .btn-secondary:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.4);
+  }
+  
+  .btn-gold {
+    background: linear-gradient(135deg, #facc15 0%, #eab308 100%);
+    color: #78350f;
+    transition: all 0.3s ease;
+  }
+  .btn-gold:hover {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    transform: translateY(-2px);
+  }
+  
+  .surah-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+  }
+  .surah-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(135deg, #22c55e, #0ea5e9);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+  }
+  .surah-card:hover::before { opacity: 1; }
+  
+  .quran-text {
+    font-family: 'Scheherazade New', serif;
+    line-height: 2.5;
+    font-size: 1.6rem;
+    color: #14532d;
+  }
+  
+  @media (max-width: 640px) {
+    .quran-text { font-size: 1.3rem; line-height: 2.2; }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .slide-up {
+    animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .progress-step {
+    transition: all 0.4s ease;
+  }
+  .progress-step.active {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px -5px rgba(34, 197, 94, 0.5);
+  }
+  .progress-step.done {
+    background: #22c55e;
+    color: white;
+  }
+  
+  .pulse-ring {
+    animation: pulseRing 2s infinite;
+  }
+  @keyframes pulseRing {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { box-shadow: 0 0 0 20px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+  }
+  
+  .scroll-hide::-webkit-scrollbar { display: none; }
+  .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  .ayah-chip {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .ayah-chip:hover {
+    background: #22c55e;
+    color: white;
+    transform: scale(1.05);
+  }
+  .ayah-chip.selected {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 4px 12px -2px rgba(34, 197, 94, 0.5);
+  }
+  
+  .modal-backdrop {
+    background: rgba(20, 83, 45, 0.6);
+    backdrop-filter: blur(8px);
+  }
+  
+  .page-preview {
+    background: linear-gradient(180deg, #fef3c7 0%, #ffffff 50%, #f0fdf4 100%);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.15), 0 0 0 1px rgba(234, 179, 8, 0.2);
+  }
+  
+  .decorative-corner {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cpath d='M0 0 L60 0 L60 10 L10 10 L10 60 L0 60 Z' fill='%2322c55e' opacity='0.3'/%3E%3Ccircle cx='15' cy='15' r='4' fill='%23eab308' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  
+  .tab-active {
+    background: white;
+    color: #15803d;
+    box-shadow: 0 4px 12px -2px rgba(0,0,0,0.1);
+  }
+  
+  .loader {
+    border: 4px solid #dcfce7;
+    border-top: 4px solid #22c55e;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .kids-mode .quran-text { font-size: 2rem; }
+  .kids-mode button { font-size: 1.2rem; padding: 1rem 2rem; }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2);
+  }
+  
+  .star-decoration::before {
+    content: '✦';
+    color: #eab308;
+    margin: 0 0.5rem;
+  }
+  .star-decoration::after {
+    content: '✦';
+    color: #eab308;
+    margin: 0 0.5rem;
+  }
+  
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 50%, #eab308 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .ayah-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Ccircle cx='20' cy='20' r='18' fill='%23fef3c7' stroke='%23eab308' stroke-width='2'/%3E%3C/svg%3E") center/contain no-repeat;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #78350f;
+    margin: 0 0.25rem;
+  }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800">
-    <!-- Navbar -->
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-screen-xl mx-auto">
-            <div class="px-6 py-4 flex items-center justify-between">
-                <div class="flex items-center gap-x-3">
-                    <div class="w-12 h-12 bg-teal-700 rounded-2xl flex items-center justify-center">
-                        <i class="fa-solid fa-book-open text-white text-3xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-extrabold text-teal-800">قصص القرآن</h1>
-                        <p class="text-xs text-teal-600 -mt-1">للأطفال</p>
-                    </div>
-                </div>
-                
-                <div class="flex items-center gap-x-2">
-                    <!-- Kids Mode Toggle -->
-                    <div class="flex items-center bg-slate-100 rounded-full p-1">
-                        <div onclick="toggleKidsMode()" class="flex items-center gap-x-2 px-4 py-1.5 rounded-full cursor-pointer" id="kids-mode-btn">
-                            <i class="fa-solid fa-child text-teal-700"></i>
-                            <span class="font-semibold text-sm">وضع الأطفال</span>
-                        </div>
-                    </div>
-                    
-                    <button onclick="showAdminPanel()" 
-                            class="px-4 py-2 text-sm font-semibold flex items-center gap-x-2 hover:bg-slate-100 rounded-xl transition-colors">
-                        <i class="fa-solid fa-cog"></i>
-                        <span>لوحة الإدارة</span>
-                    </button>
-                    
-                    <div class="w-9 h-9 bg-teal-100 rounded-full flex items-center justify-center">
-                        <img src="https://i.pravatar.cc/36?img=28" class="rounded-full" alt="صورة المستخدم">
-                    </div>
-                </div>
-            </div>
+<body class="pattern-bg">
+
+<!-- Header -->
+<header id="mainHeader" class="sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-brand-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 md:h-20">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+        <div class="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br from-brand-500 to-brand-700 flex items-center justify-center shadow-lg">
+          <svg class="w-6 h-6 md:w-7 md:h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm0 2.18l8 4v8.82c0 4.57-3.15 8.79-8 9.93-4.85-1.14-8-5.36-8-9.93V8.18l8-4zM11 7v6h2V7h-2zm0 8v2h2v-2h-2z"/>
+          </svg>
         </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <div class="max-w-screen-xl mx-auto px-6 pt-8 pb-16">
-        
-        <!-- Hero Section -->
-        <div id="home-section">
-            <div class="bg-gradient-to-br from-teal-700 to-teal-800 text-white rounded-3xl p-10 mb-10">
-                <div class="max-w-lg">
-                    <h2 class="text-5xl font-extrabold leading-tight mb-4">حوّل آيات القرآن<br>إلى قصص مصورة</h2>
-                    <p class="text-teal-100 text-xl mb-8">محتوى تعليمي جميل وآمن للأطفال مع الحفاظ على النص القرآني الصحيح</p>
-                    
-                    <div class="flex flex-wrap gap-3">
-                        <button onclick="showSurahsSection()" 
-                                class="kids-button px-8 py-4 bg-white text-teal-800 rounded-2xl font-bold flex items-center gap-x-3 text-lg shadow-lg">
-                            <i class="fa-solid fa-play"></i>
-                            <span>ابدأ الآن</span>
-                        </button>
-                        
-                        <button onclick="showCreateModal()" 
-                                class="kids-button px-8 py-4 bg-teal-600 hover:bg-teal-500 transition-colors text-white rounded-2xl font-bold flex items-center gap-x-3 text-lg">
-                            <i class="fa-solid fa-magic"></i>
-                            <span>إنشاء قصة جديدة</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-                <div class="bg-white p-5 rounded-2xl border">
-                    <div class="text-teal-700 text-3xl font-extrabold">114</div>
-                    <div class="text-sm text-slate-500">سورة قرآنية</div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border">
-                    <div class="text-teal-700 text-3xl font-extrabold">6,236</div>
-                    <div class="text-sm text-slate-500">آية محفوظة</div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border">
-                    <div class="text-teal-700 text-3xl font-extrabold">1,842</div>
-                    <div class="text-sm text-slate-500">قصة منشأة</div>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border">
-                    <div class="text-teal-700 text-3xl font-extrabold">98k</div>
-                    <div class="text-sm text-slate-500">صفحة مصورة</div>
-                </div>
-            </div>
+        <div>
+          <h1 class="text-lg md:text-xl font-bold text-brand-800">قصص القرآن للأطفال</h1>
+          <p class="text-xs text-gray-500 hidden sm:block">محتوى قرآني مصوّر وتعليمي</p>
         </div>
-        
-        <!-- Surahs Section -->
-        <div id="surahs-section" class="hidden">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="text-3xl font-extrabold">السور القرآنية</h3>
-                    <p class="text-slate-500">اختر سورة للبدء في إنشاء المحتوى</p>
-                </div>
-                <div class="relative w-72">
-                    <input type="text" id="surah-search" placeholder="ابحث عن سورة..." 
-                           onkeyup="filterSurahs()"
-                           class="w-full bg-white border border-slate-200 px-5 py-3 rounded-2xl text-sm focus:outline-none focus:border-teal-300">
-                    <i class="fa-solid fa-search absolute left-5 top-4 text-slate-400"></i>
-                </div>
-            </div>
-            
-            <!-- Surahs Grid -->
-            <div id="surahs-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4 surah-grid max-h-[620px] overflow-y-auto pr-2">
-                <!-- Populated by JavaScript -->
-            </div>
-        </div>
-        
-        <!-- Library Section -->
-        <div id="library-section" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-3xl font-extrabold">مكتبة القصص</h3>
-                <button onclick="showCreateModal()" class="px-5 py-2.5 bg-teal-700 text-white rounded-2xl flex items-center gap-x-2 text-sm font-bold">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>إنشاء قصة جديدة</span>
-                </button>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="library-grid">
-                <!-- Populated dynamically -->
-            </div>
-        </div>
+      </div>
+      
+      <nav class="hidden lg:flex items-center gap-1">
+        <button onclick="navigate('home')" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition">الرئيسية</button>
+        <button onclick="navigate('surahs')" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition">السور</button>
+        <button onclick="navigate('create')" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition">إنشاء قصة</button>
+        <button onclick="navigate('library')" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition">المكتبة</button>
+        <button onclick="navigate('search')" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition">بحث</button>
+        <button onclick="navigate('admin')" class="nav-link px-4 py-2 rounded-lg text-gray-700 hover:bg-brand-50 hover:text-brand-700 transition">الإدارة</button>
+      </nav>
+      
+      <div class="flex items-center gap-2">
+        <button onclick="toggleKidsMode()" id="kidsModeBtn" class="p-2 md:p-2.5 rounded-lg bg-gold-400 hover:bg-gold-500 text-white transition" title="وضع الأطفال">
+          <svg class="w-5 h-5 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-6c.78 2.34 2.72 4 5 4s4.22-1.66 5-4H7zm8-2c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1zm-6 0c.55 0 1-.45 1-1s-.45-1-1-1-1 .45-1 1 .45 1 1 1z"/>
+          </svg>
+        </button>
+        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded-lg hover:bg-brand-50">
+          <svg class="w-6 h-6 text-brand-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
     </div>
     
-    <!-- Surah Detail Modal -->
-    <div id="surah-modal" onclick="if (event.target.id === 'surah-modal') hideSurahModal()" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
-        <div onclick="event.stopImmediatePropagation()" class="bg-white w-full max-w-3xl mx-4 rounded-3xl shadow-xl overflow-hidden">
-            <div class="p-8">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <div id="modal-surah-name" class="text-4xl font-extrabold"></div>
-                        <div class="flex items-center gap-x-3 mt-1">
-                            <div id="modal-surah-number" class="px-3 py-1 text-sm font-bold bg-teal-100 text-teal-700 rounded-full"></div>
-                            <div id="modal-ayah-count" class="text-sm text-slate-500"></div>
-                        </div>
-                    </div>
-                    <button onclick="hideSurahModal()" class="text-3xl text-slate-300 hover:text-slate-400">×</button>
-                </div>
-                
-                <div class="mt-8">
-                    <div class="mb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold">اختر نطاق الآيات</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="text-xs text-slate-500 block mb-1">من الآية</label>
-                                <input type="number" id="start-ayah" value="1" class="w-full border border-slate-200 px-4 py-2.5 rounded-2xl">
-                            </div>
-                            <div>
-                                <label class="text-xs text-slate-500 block mb-1">إلى الآية</label>
-                                <input type="number" id="end-ayah" class="w-full border border-slate-200 px-4 py-2.5 rounded-2xl">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-3 mt-6">
-                        <button onclick="createStoryFromSurah()" 
-                                class="flex-1 kids-button py-3.5 bg-teal-700 hover:bg-teal-800 text-white rounded-2xl font-bold">
-                            إنشاء قصة مصورة
-                        </button>
-                        <button onclick="createExplanation()" 
-                                class="flex-1 kids-button py-3.5 border border-teal-700 text-teal-700 rounded-2xl font-bold">
-                            شرح مصور للأطفال
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden lg:hidden pb-4 space-y-1">
+      <button onclick="navigate('home'); toggleMobileMenu()" class="block w-full text-right px-4 py-2 rounded-lg hover:bg-brand-50">الرئيسية</button>
+      <button onclick="navigate('surahs'); toggleMobileMenu()" class="block w-full text-right px-4 py-2 rounded-lg hover:bg-brand-50">السور</button>
+      <button onclick="navigate('create'); toggleMobileMenu()" class="block w-full text-right px-4 py-2 rounded-lg hover:bg-brand-50">إنشاء قصة</button>
+      <button onclick="navigate('library'); toggleMobileMenu()" class="block w-full text-right px-4 py-2 rounded-lg hover:bg-brand-50">المكتبة</button>
+      <button onclick="navigate('search'); toggleMobileMenu()" class="block w-full text-right px-4 py-2 rounded-lg hover:bg-brand-50">بحث</button>
+      <button onclick="navigate('admin'); toggleMobileMenu()" class="block w-full text-right px-4 py-2 rounded-lg hover:bg-brand-50">الإدارة</button>
     </div>
-    
-    <!-- Story Creation Progress Modal -->
-    <div id="progress-modal" class="hidden fixed inset-0 bg-black/60 z-[60] flex items-center justify-center">
-        <div class="bg-white w-full max-w-md mx-4 rounded-3xl p-8">
+  </div>
+</header>
+
+<main id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10"></main>
+
+<!-- Footer -->
+<footer class="bg-brand-900 text-white mt-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid md:grid-cols-4 gap-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/></svg>
+          </div>
+          <h3 class="text-xl font-bold">قصص القرآن للأطفال</h3>
+        </div>
+        <p class="text-brand-100 text-sm leading-relaxed max-w-md">منصة عربية احترافية لتحويل آيات القرآن الكريم إلى صفحات مصورة تعليمية للأطفال، مع المحافظة التامة على النص القرآني الصحيح من مصدر موثوق.</p>
+      </div>
+      <div>
+        <h4 class="font-bold mb-3">روابط سريعة</h4>
+        <ul class="space-y-2 text-sm text-brand-100">
+          <li><a onclick="navigate('surahs')" class="hover:text-white cursor-pointer">السور الـ114</a></li>
+          <li><a onclick="navigate('create')" class="hover:text-white cursor-pointer">إنشاء قصة</a></li>
+          <li><a onclick="navigate('library')" class="hover:text-white cursor-pointer">مكتبة القصص</a></li>
+          <li><a onclick="navigate('search')" class="hover:text-white cursor-pointer">البحث</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold mb-3">مصادر القرآن</h4>
+        <p class="text-sm text-brand-100 leading-relaxed">يتم جلب النص القرآني من API موثوق (alquran.cloud) المبني على مصحف المدينة النبوية، مع التحقق من كل آية قبل الاستخدام.</p>
+      </div>
+    </div>
+    <div class="border-t border-white/10 mt-8 pt-6 text-center text-sm text-brand-200">
+      <p>© 2024 قصص القرآن للأطفال - جميع الحقوق محفوظة | النص القرآني محفوظ ومُتحقق منه</p>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal container -->
+<div id="modalContainer"></div>
+
+<!-- Toast container -->
+<div id="toastContainer" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 space-y-2"></div>
+
+<script>
+/* =========================================================
+   STATE & DATA
+   ========================================================= */
+const state = {
+  currentView: 'home',
+  currentSurah: null,
+  currentStory: null,
+  selectedAyahs: [],
+  kidsMode: false,
+  surahs: [],
+  quranCache: {}, // surahNumber -> [ayahs]
+  stories: JSON.parse(localStorage.getItem('quranStories') || '[]'),
+  currentUser: JSON.parse(localStorage.getItem('currentUser') || 'null'),
+  creationWizard: {
+    step: 1,
+    surah: null,
+    startAyah: null,
+    endAyah: null,
+    type: 'story',
+    artStyle: 'cartoon',
+    estimatedPages: 5
+  }
+};
+
+/* 114 Surahs metadata (from standard Mushaf) */
+const SURAHS_META = [
+  {n:1,name:"الفاتحة",ayahs:7,type:"مكية"},{n:2,name:"البقرة",ayahs:286,type:"مدنية"},
+  {n:3,name:"آل عمران",ayahs:200,type:"مدنية"},{n:4,name:"النساء",ayahs:176,type:"مدنية"},
+  {n:5,name:"المائدة",ayahs:120,type:"مدنية"},{n:6,name:"الأنعام",ayahs:165,type:"مكية"},
+  {n:7,name:"الأعراف",ayahs:206,type:"مكية"},{n:8,name:"الأنفال",ayahs:75,type:"مدنية"},
+  {n:9,name:"التوبة",ayahs:129,type:"مدنية"},{n:10,name:"يونس",ayahs:109,type:"مكية"},
+  {n:11,name:"هود",ayahs:123,type:"مكية"},{n:12,name:"يوسف",ayahs:111,type:"مكية"},
+  {n:13,name:"الرعد",ayahs:43,type:"مدنية"},{n:14,name:"إبراهيم",ayahs:52,type:"مكية"},
+  {n:15,name:"الحجر",ayahs:99,type:"مكية"},{n:16,name:"النحل",ayahs:128,type:"مكية"},
+  {n:17,name:"الإسراء",ayahs:111,type:"مكية"},{n:18,name:"الكهف",ayahs:110,type:"مكية"},
+  {n:19,name:"مريم",ayahs:98,type:"مكية"},{n:20,name:"طه",ayahs:135,type:"مكية"},
+  {n:21,name:"الأنبياء",ayahs:112,type:"مكية"},{n:22,name:"الحج",ayahs:78,type:"مدنية"},
+  {n:23,name:"المؤمنون",ayahs:118,type:"مكية"},{n:24,name:"النور",ayahs:64,type:"مدنية"},
+  {n:25,name:"الفرقان",ayahs:77,type:"مكية"},{n:26,name:"الشعراء",ayahs:227,type:"مكية"},
+  {n:27,name:"النمل",ayahs:93,type:"مكية"},{n:28,name:"القصص",ayahs:88,type:"مكية"},
+  {n:29,name:"العنكبوت",ayahs:69,type:"مكية"},{n:30,name:"الروم",ayahs:60,type:"مكية"},
+  {n:31,name:"لقمان",ayahs:34,type:"مكية"},{n:32,name:"السجدة",ayahs:30,type:"مكية"},
+  {n:33,name:"الأحزاب",ayahs:73,type:"مدنية"},{n:34,name:"سبأ",ayahs:54,type:"مكية"},
+  {n:35,name:"فاطر",ayahs:45,type:"مكية"},{n:36,name:"يس",ayahs:83,type:"مكية"},
+  {n:37,name:"الصافات",ayahs:182,type:"مكية"},{n:38,name:"ص",ayahs:88,type:"مكية"},
+  {n:39,name:"الزمر",ayahs:75,type:"مكية"},{n:40,name:"غافر",ayahs:85,type:"مكية"},
+  {n:41,name:"فصلت",ayahs:54,type:"مكية"},{n:42,name:"الشورى",ayahs:53,type:"مكية"},
+  {n:43,name:"الزخرف",ayahs:89,type:"مكية"},{n:44,name:"الدخان",ayahs:59,type:"مكية"},
+  {n:45,name:"الجاثية",ayahs:37,type:"مكية"},{n:46,name:"الأحقاف",ayahs:35,type:"مكية"},
+  {n:47,name:"محمد",ayahs:38,type:"مدنية"},{n:48,name:"الفتح",ayahs:29,type:"مدنية"},
+  {n:49,name:"الحجرات",ayahs:18,type:"مدنية"},{n:50,name:"ق",ayahs:45,type:"مكية"},
+  {n:51,name:"الذاريات",ayahs:60,type:"مكية"},{n:52,name:"الطور",ayahs:49,type:"مكية"},
+  {n:53,name:"النجم",ayahs:62,type:"مكية"},{n:54,name:"القمر",ayahs:55,type:"مكية"},
+  {n:55,name:"الرحمن",ayahs:78,type:"مدنية"},{n:56,name:"الواقعة",ayahs:96,type:"مكية"},
+  {n:57,name:"الحديد",ayahs:29,type:"مدنية"},{n:58,name:"المجادلة",ayahs:22,type:"مدنية"},
+  {n:59,name:"الحشر",ayahs:24,type:"مدنية"},{n:60,name:"الممتحنة",ayahs:13,type:"مدنية"},
+  {n:61,name:"الصف",ayahs:14,type:"مدنية"},{n:62,name:"الجمعة",ayahs:11,type:"مدنية"},
+  {n:63,name:"المنافقون",ayahs:11,type:"مدنية"},{n:64,name:"التغابن",ayahs:18,type:"مدنية"},
+  {n:65,name:"الطلاق",ayahs:12,type:"مدنية"},{n:66,name:"التحريم",ayahs:12,type:"مدنية"},
+  {n:67,name:"الملك",ayahs:30,type:"مكية"},{n:68,name:"القلم",ayahs:52,type:"مكية"},
+  {n:69,name:"الحاقة",ayahs:52,type:"مكية"},{n:70,name:"المعارج",ayahs:44,type:"مكية"},
+  {n:71,name:"نوح",ayahs:28,type:"مكية"},{n:72,name:"الجن",ayahs:28,type:"مكية"},
+  {n:73,name:"المزمل",ayahs:20,type:"مكية"},{n:74,name:"المدثر",ayahs:56,type:"مكية"},
+  {n:75,name:"القيامة",ayahs:40,type:"مكية"},{n:76,name:"الإنسان",ayahs:31,type:"مدنية"},
+  {n:77,name:"المرسلات",ayahs:50,type:"مكية"},{n:78,name:"النبأ",ayahs:40,type:"مكية"},
+  {n:79,name:"النازعات",ayahs:46,type:"مكية"},{n:80,name:"عبس",ayahs:42,type:"مكية"},
+  {n:81,name:"التكوير",ayahs:29,type:"مكية"},{n:82,name:"الانفطار",ayahs:19,type:"مكية"},
+  {n:83,name:"المطففين",ayahs:36,type:"مكية"},{n:84,name:"الانشقاق",ayahs:25,type:"مكية"},
+  {n:85,name:"البروج",ayahs:22,type:"مكية"},{n:86,name:"الطارق",ayahs:17,type:"مكية"},
+  {n:87,name:"الأعلى",ayahs:19,type:"مكية"},{n:88,name:"الغاشية",ayahs:26,type:"مكية"},
+  {n:89,name:"الفجر",ayahs:30,type:"مكية"},{n:90,name:"البلد",ayahs:20,type:"مكية"},
+  {n:91,name:"الشمس",ayahs:15,type:"مكية"},{n:92,name:"الليل",ayahs:21,type:"مكية"},
+  {n:93,name:"الضحى",ayahs:11,type:"مكية"},{n:94,name:"الشرح",ayahs:8,type:"مكية"},
+  {n:95,name:"التين",ayahs:8,type:"مكية"},{n:96,name:"العلق",ayahs:19,type:"مكية"},
+  {n:97,name:"القدر",ayahs:5,type:"مكية"},{n:98,name:"البينة",ayahs:8,type:"مدنية"},
+  {n:99,name:"الزلزلة",ayahs:8,type:"مدنية"},{n:100,name:"العاديات",ayahs:11,type:"مكية"},
+  {n:101,name:"القارعة",ayahs:11,type:"مكية"},{n:102,name:"التكاثر",ayahs:8,type:"مكية"},
+  {n:103,name:"العصر",ayahs:3,type:"مكية"},{n:104,name:"الهمزة",ayahs:9,type:"مكية"},
+  {n:105,name:"الفيل",ayahs:5,type:"مكية"},{n:106,name:"قريش",ayahs:4,type:"مكية"},
+  {n:107,name:"الماعون",ayahs:7,type:"مكية"},{n:108,name:"الكوثر",ayahs:3,type:"مكية"},
+  {n:109,name:"الكافرون",ayahs:6,type:"مكية"},{n:110,name:"النصر",ayahs:3,type:"مدنية"},
+  {n:111,name:"المسد",ayahs:5,type:"مكية"},{n:112,name:"الإخلاص",ayahs:4,type:"مكية"},
+  {n:113,name:"الفلق",ayahs:5,type:"مكية"},{n:114,name:"الناس",ayahs:6,type:"مكية"}
+];
+
+/* =========================================================
+   QURAN API - Fetching from trusted source
+   ========================================================= */
+async function fetchSurahAyahs(surahNumber) {
+  if (state.quranCache[surahNumber]) return state.quranCache[surahNumber];
+  try {
+    const res = await fetch(`https://api.alquran.cloud/v1/surah/${surahNumber}`);
+    const data = await res.json();
+    if (data.code !== 200) throw new Error('API error');
+    const ayahs = data.data.ayahs.map(a => ({
+      surahNumber: surahNumber,
+      surahName: data.data.name.replace('سُورَةُ ', ''),
+      number: a.number,
+      numberInSurah: a.numberInSurah,
+      text: a.text,
+      juz: a.juz,
+      page: a.page
+    }));
+    state.quranCache[surahNumber] = ayahs;
+    return ayahs;
+  } catch (err) {
+    console.error('Failed to fetch surah:', err);
+    showToast('تعذر جلب الآيات، تحقق من الاتصال', 'error');
+    return null;
+  }
+}
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
+function navigate(view, params = {}) {
+  state.currentView = view;
+  Object.assign(state, params);
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleMobileMenu() {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+}
+
+function toggleKidsMode() {
+  state.kidsMode = !state.kidsMode;
+  document.body.classList.toggle('kids-mode', state.kidsMode);
+  document.getElementById('kidsModeBtn').classList.toggle('ring-4', state.kidsMode);
+  document.getElementById('kidsModeBtn').classList.toggle('ring-gold-400', state.kidsMode);
+  showToast(state.kidsMode ? 'تم تفعيل وضع الأطفال 👶' : 'تم إيقاف وضع الأطفال', 'success');
+}
+
+/* =========================================================
+   RENDER ROUTER
+   ========================================================= */
+function render() {
+  const app = document.getElementById('app');
+  switch (state.currentView) {
+    case 'home': app.innerHTML = renderHome(); break;
+    case 'surahs': app.innerHTML = renderSurahsList(); break;
+    case 'surah': app.innerHTML = renderSurahDetail(); loadSurahDetail(); break;
+    case 'create': app.innerHTML = renderCreateWizard(); break;
+    case 'library': app.innerHTML = renderLibrary(); break;
+    case 'search': app.innerHTML = renderSearch(); break;
+    case 'story': app.innerHTML = renderStoryView(); break;
+    case 'admin': app.innerHTML = renderAdmin(); break;
+    default: app.innerHTML = renderHome();
+  }
+}
+
+/* =========================================================
+   HOME VIEW
+   ========================================================= */
+function renderHome() {
+  return `
+    <section class="fade-in">
+      <!-- Hero -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-700 to-sky-brand-700 text-white p-8 md:p-14 mb-10 shadow-2xl">
+        <div class="islamic-pattern absolute inset-0 opacity-30"></div>
+        <div class="relative z-10 max-w-3xl">
+          <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-sm mb-4">
+            <span class="w-2 h-2 bg-gold-400 rounded-full animate-pulse"></span>
+            <span>114 سورة • جميع الآيات • محتوى موثوق</span>
+          </div>
+          <h1 class="text-3xl md:text-5xl font-black mb-4 leading-tight">
+            قصص القرآن <span class="text-gold-400">للأطفال</span>
+          </h1>
+          <p class="text-lg md:text-xl text-brand-50 leading-relaxed mb-8">
+            حوّل آيات القرآن الكريم إلى صفحات مصوّرة تعليمية للأطفال بطريقة مبسطة وجذابة، مع المحافظة التامة على النص القرآني الصحيح.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <button onclick="navigate('create')" class="btn-gold px-6 py-3 rounded-xl font-bold flex items-center gap-2">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+              إنشاء قصة جديدة
+            </button>
+            <button onclick="navigate('surahs')" class="bg-white/20 hover:bg-white/30 backdrop-blur px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>
+              اختر سورة
+            </button>
+            <button onclick="navigate('library')" class="bg-white/20 hover:bg-white/30 backdrop-blur px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z M12 5.84L15.39 11h-6.78z M12 22l5.5-9h-11z M12 18.16L8.61 13h6.78z"/></svg>
+              مكتبة القصص
+            </button>
+            <button onclick="navigate('search')" class="bg-white/20 hover:bg-white/30 backdrop-blur px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+              بحث
+            </button>
+          </div>
+        </div>
+        <div class="hidden md:block absolute left-8 top-1/2 -translate-y-1/2 w-64 h-64 opacity-20">
+          <svg viewBox="0 0 200 200" class="w-full h-full">
+            <defs>
+              <pattern id="stars" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M20 5 L23 15 L33 15 L25 22 L28 32 L20 26 L12 32 L15 22 L7 15 L17 15 Z" fill="white"/>
+              </pattern>
+            </defs>
+            <circle cx="100" cy="100" r="95" fill="url(#stars)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="grid md:grid-cols-3 gap-5 mb-10">
+        ${[
+          {icon: '📖', title: 'نص قرآني موثوق', desc: 'نجلب الآيات من مصدر موثوق ونتحقق من كل كلمة قبل الاستخدام'},
+          {icon: '🎨', title: 'رسومات تعليمية', desc: 'صفحات مصورة بأساليب متعددة مناسبة للأطفال، هادئة وجذابة'},
+          {icon: '🛡️', title: 'احترام كامل للقرآن', desc: 'لا تغيير ولا اختصار ولا إضافة - النص القرآني مقدس ومحفوظ'}
+        ].map(f => `
+          <div class="card-hover bg-white rounded-2xl p-6 shadow-sm border border-brand-100">
+            <div class="text-4xl mb-3">${f.icon}</div>
+            <h3 class="font-bold text-lg text-brand-800 mb-2">${f.title}</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">${f.desc}</p>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Quick Surahs -->
+      <div class="mb-10">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="text-2xl md:text-3xl font-bold text-brand-800">السور المميزة للأطفال</h2>
+          <button onclick="navigate('surahs')" class="text-brand-600 hover:text-brand-800 font-semibold text-sm flex items-center gap-1">
+            عرض الكل
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/></svg>
+          </button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+          ${[1, 12, 18, 19, 36, 67, 93, 105, 108, 110, 112, 113].map(n => {
+            const s = SURAHS_META.find(x => x.n === n);
+            return `
+              <div onclick="openSurah(${n})" class="surah-card card-hover rounded-2xl p-4 cursor-pointer text-center">
+                <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center font-bold">${n}</div>
+                <h3 class="font-bold text-brand-800 text-sm md:text-base">${s.name}</h3>
+                <p class="text-xs text-gray-500 mt-1">${s.ayahs} آية</p>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        ${[
+          {n: '114', l: 'سورة كاملة', c: 'from-brand-500 to-brand-700'},
+          {n: '6,236', l: 'آية كريمة', c: 'from-sky-brand-500 to-sky-brand-700'},
+          {n: '25', l: 'نبي ورسول', c: 'from-gold-500 to-gold-600'},
+          {n: state.stories.length, l: 'قصة تم إنشاؤها', c: 'from-purple-500 to-pink-600'}
+        ].map(s => `
+          <div class="bg-gradient-to-br ${s.c} text-white rounded-2xl p-5 text-center shadow-lg">
+            <div class="text-3xl md:text-4xl font-black mb-1">${s.n}</div>
+            <div class="text-sm opacity-90">${s.l}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- How it works -->
+      <div class="bg-white rounded-3xl p-6 md:p-10 shadow-sm border border-brand-100 mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-brand-800 mb-6 text-center">كيف يعمل التطبيق؟</h2>
+        <div class="grid md:grid-cols-4 gap-6">
+          ${[
+            {n: 1, t: 'اختر السورة', d: 'من السور الـ114 كاملة'},
+            {n: 2, t: 'حدد الآيات', d: 'آية واحدة أو نطاق'},
+            {n: 3, t: 'اختر النوع', d: 'قصة أو شرح مصور'},
+            {n: 4, t: 'احصل على الصفحات', d: 'صور PNG جاهزة'}
+          ].map(s => `
             <div class="text-center">
-                <h4 class="font-extrabold text-xl mb-2">جاري إنشاء القصة...</h4>
-                <div class="text-sm text-slate-500 mb-6">يرجى الانتظار قليلاً</div>
-                
-                <div class="space-y-4 text-right" id="progress-steps">
-                    <!-- Steps populated by JS -->
-                </div>
-                
-                <div class="mt-8">
-                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="h-2 bg-teal-600 transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                </div>
+              <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700 text-white flex items-center justify-center text-2xl font-black shadow-lg">${s.n}</div>
+              <h3 class="font-bold text-brand-800 mb-1">${s.t}</h3>
+              <p class="text-sm text-gray-600">${s.d}</p>
             </div>
+          `).join('')}
         </div>
+      </div>
+    </section>
+  `;
+}
+
+/* =========================================================
+   SURAHS LIST VIEW
+   ========================================================= */
+function renderSurahsList() {
+  return `
+    <section class="fade-in">
+      <div class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-black text-brand-800 mb-2">السور الـ114</h1>
+        <p class="text-gray-600">اختر أي سورة لبدء إنشاء محتوى تعليمي مصور</p>
+      </div>
+      
+      <div class="bg-white rounded-2xl p-4 mb-6 shadow-sm border border-brand-100">
+        <div class="flex flex-col md:flex-row gap-3">
+          <div class="flex-1 relative">
+            <svg class="w-5 h-5 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input id="surahSearch" oninput="filterSurahs()" type="text" placeholder="ابحث عن سورة بالاسم أو الرقم..." class="w-full pr-10 pl-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500">
+          </div>
+          <select id="surahTypeFilter" onchange="filterSurahs()" class="px-4 py-3 rounded-xl border border-gray-200">
+            <option value="">جميع الأنواع</option>
+            <option value="مكية">مكية</option>
+            <option value="مدنية">مدنية</option>
+          </select>
+        </div>
+      </div>
+      
+      <div id="surahsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+        ${renderSurahCards(SURAHS_META)}
+      </div>
+    </section>
+  `;
+}
+
+function renderSurahCards(list) {
+  return list.map(s => `
+    <div onclick="openSurah(${s.n})" class="surah-card card-hover rounded-2xl p-4 cursor-pointer text-center">
+      <div class="relative inline-block mb-2">
+        <svg viewBox="0 0 60 60" class="w-14 h-14">
+          <path d="M30 2 L55 15 L55 45 L30 58 L5 45 L5 15 Z" fill="none" stroke="url(#grad${s.n})" stroke-width="2"/>
+          <defs><linearGradient id="grad${s.n}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22c55e"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs>
+          <text x="30" y="36" text-anchor="middle" fill="#15803d" font-size="18" font-weight="bold" font-family="Cairo">${s.n}</text>
+        </svg>
+      </div>
+      <h3 class="font-bold text-brand-800 text-sm md:text-base leading-tight">${s.name}</h3>
+      <p class="text-xs text-gray-500 mt-1">${s.ayahs} آية • ${s.type}</p>
     </div>
+  `).join('');
+}
+
+function filterSurahs() {
+  const q = document.getElementById('surahSearch').value.trim().toLowerCase();
+  const type = document.getElementById('surahTypeFilter').value;
+  const filtered = SURAHS_META.filter(s => {
+    const matchQ = !q || s.name.includes(q) || String(s.n) === q;
+    const matchT = !type || s.type === type;
+    return matchQ && matchT;
+  });
+  document.getElementById('surahsGrid').innerHTML = renderSurahCards(filtered);
+}
+
+/* =========================================================
+   SURAH DETAIL VIEW
+   ========================================================= */
+function openSurah(n) {
+  state.currentSurah = SURAHS_META.find(s => s.n === n);
+  state.selectedAyahs = [];
+  state.surahViewMode = 'browse';
+  navigate('surah');
+}
+
+async function loadSurahDetail() {
+  const loader = document.getElementById('surahLoader');
+  const content = document.getElementById('surahContent');
+  if (!loader || !content) return;
+  loader.classList.remove('hidden');
+  const ayahs = await fetchSurahAyahs(state.currentSurah.n);
+  loader.classList.add('hidden');
+  if (!ayahs) {
+    content.innerHTML = '<div class="text-center py-10 text-red-600">تعذر تحميل الآيات</div>';
+    return;
+  }
+  content.innerHTML = renderAyahsList(ayahs);
+}
+
+function renderSurahDetail() {
+  const s = state.currentSurah;
+  if (!s) return '<div>لم يتم تحديد السورة</div>';
+  return `
+    <section class="fade-in">
+      <div class="bg-gradient-to-br from-brand-600 to-sky-brand-700 text-white rounded-3xl p-6 md:p-10 mb-6 shadow-xl relative overflow-hidden">
+        <div class="islamic-pattern absolute inset-0 opacity-20"></div>
+        <div class="relative z-10">
+          <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+            <button onclick="navigate('surahs')" class="bg-white/20 hover:bg-white/30 backdrop-blur px-4 py-2 rounded-lg text-sm flex items-center gap-2">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+              العودة للسور
+            </button>
+            <div class="flex gap-2">
+              <span class="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-sm">${s.type}</span>
+              <span class="bg-gold-400 text-brand-900 px-3 py-1 rounded-full text-sm font-bold">ترتيب: ${s.n}</span>
+            </div>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-black mb-2 font-amiri">سورة ${s.name}</h1>
+          <p class="text-brand-50 text-lg">${s.ayahs} آية • السورة رقم ${s.n}</p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-brand-100 mb-6">
+        <div class="flex flex-wrap gap-3 mb-4">
+          <button onclick="setSurahViewMode('browse')" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm ${state.surahViewMode==='browse'?'tab-active':'text-gray-600 hover:bg-gray-100'}">تصفح الآيات</button>
+          <button onclick="setSurahViewMode('select')" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm ${state.surahViewMode==='select'?'tab-active':'text-gray-600 hover:bg-gray-100'}">اختيار آيات</button>
+          <button onclick="setSurahViewMode('range')" class="tab-btn px-4 py-2 rounded-lg font-semibold text-sm ${state.surahViewMode==='range'?'tab-active':'text-gray-600 hover:bg-gray-100'}">نطاق آيات</button>
+          <div class="flex-1"></div>
+          <div class="relative flex-1 min-w-[200px]">
+            <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input id="ayahSearch" oninput="filterAyahs()" type="text" placeholder="ابحث في السورة..." class="w-full pr-9 pl-4 py-2 rounded-lg border border-gray-200 text-sm">
+          </div>
+        </div>
+        
+        <div id="selectionInfo" class="hidden bg-brand-50 border border-brand-200 rounded-xl p-4 mb-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <div>
+              <p class="font-bold text-brand-800" id="selectionText">لم يتم اختيار آيات</p>
+              <p class="text-xs text-gray-600 mt-1" id="selectionDetail"></p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="clearSelection()" class="px-3 py-1.5 rounded-lg text-sm bg-gray-100 hover:bg-gray-200 text-gray-700">مسح</button>
+              <button onclick="startCreationFromSelection()" class="btn-primary px-4 py-1.5 rounded-lg text-sm text-white font-semibold">إنشاء محتوى ←</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="surahLoader" class="text-center py-10 hidden">
+        <div class="loader mx-auto mb-3"></div>
+        <p class="text-gray-600">جاري تحميل الآيات من المصدر الموثوق...</p>
+      </div>
+      <div id="surahContent"></div>
+    </section>
+  `;
+}
+
+function setSurahViewMode(mode) {
+  state.surahViewMode = mode;
+  if (mode !== 'select') state.selectedAyahs = [];
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-gray-600');
+  });
+  event.target.classList.add('tab-active');
+  event.target.classList.remove('text-gray-600');
+  const ayahs = state.quranCache[state.currentSurah.n];
+  if (ayahs) document.getElementById('surahContent').innerHTML = renderAyahsList(ayahs);
+}
+
+function renderAyahsList(ayahs) {
+  if (state.surahViewMode === 'browse') {
+    return `
+      <div class="bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-brand-100">
+        <div class="text-center mb-6 pb-6 border-b-2 border-brand-100">
+          <p class="font-amiri text-2xl md:text-3xl text-brand-800">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</p>
+        </div>
+        <div class="quran-text text-center leading-loose">
+          ${ayahs.map(a => `<span class="inline">${a.text} <span class="ayah-number">${a.numberInSurah}</span></span>`).join(' ')}
+        </div>
+      </div>
+    `;
+  }
+  if (state.surahViewMode === 'select') {
+    return `
+      <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-brand-100">
+        <p class="text-sm text-gray-600 mb-4 text-center">اضغط على الآيات لاختيارها (يمكن اختيار آيات متعددة)</p>
+        <div class="flex flex-wrap gap-2 justify-center">
+          ${ayahs.map(a => `
+            <button onclick="toggleAyahSelection(${a.numberInSurah})" class="ayah-chip px-3 py-2 rounded-lg border-2 border-brand-200 bg-brand-50 text-brand-800 font-semibold text-sm ${state.selectedAyahs.includes(a.numberInSurah)?'selected':''}">
+              ${a.numberInSurah}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  if (state.surahViewMode === 'range') {
+    return `
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100">
+        <p class="text-sm text-gray-600 mb-4 text-center">حدد بداية ونهاية النطاق</p>
+        <div class="grid md:grid-cols-2 gap-4 max-w-xl mx-auto">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">من آية</label>
+            <input id="rangeStart" type="number" min="1" max="${ayahs.length}" value="1" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-center font-bold text-lg">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">إلى آية</label>
+            <input id="rangeEnd" type="number" min="1" max="${ayahs.length}" value="${Math.min(10, ayahs.length)}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-center font-bold text-lg">
+          </div>
+        </div>
+        <div class="text-center mt-6">
+          <button onclick="applyRange()" class="btn-primary px-6 py-3 rounded-xl text-white font-bold">تطبيق النطاق ←</button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function toggleAyahSelection(num) {
+  const idx = state.selectedAyahs.indexOf(num);
+  if (idx >= 0) state.selectedAyahs.splice(idx, 1);
+  else state.selectedAyahs.push(num);
+  state.selectedAyahs.sort((a,b) => a-b);
+  const ayahs = state.quranCache[state.currentSurah.n];
+  document.getElementById('surahContent').innerHTML = renderAyahsList(ayahs);
+  updateSelectionInfo();
+}
+
+function applyRange() {
+  const start = parseInt(document.getElementById('rangeStart').value);
+  const end = parseInt(document.getElementById('rangeEnd').value);
+  if (isNaN(start) || isNaN(end) || start < 1 || end > state.currentSurah.ayahs || start > end) {
+    showToast('نطاق غير صحيح', 'error');
+    return;
+  }
+  state.selectedAyahs = [];
+  for (let i = start; i <= end; i++) state.selectedAyahs.push(i);
+  updateSelectionInfo();
+  showToast(`تم اختيار ${state.selectedAyahs.length} آية`, 'success');
+}
+
+function updateSelectionInfo() {
+  const info = document.getElementById('selectionInfo');
+  const text = document.getElementById('selectionText');
+  const detail = document.getElementById('selectionDetail');
+  if (!info) return;
+  if (state.selectedAyahs.length === 0) {
+    info.classList.add('hidden');
+    return;
+  }
+  info.classList.remove('hidden');
+  const isContinuous = state.selectedAyahs.every((v,i,a) => i===0 || v === a[i-1]+1);
+  if (isContinuous) {
+    text.textContent = `النطاق: من الآية ${state.selectedAyahs[0]} إلى ${state.selectedAyahs[state.selectedAyahs.length-1]}`;
+  } else {
+    text.textContent = `تم اختيار ${state.selectedAyahs.length} آية منفصلة`;
+  }
+  detail.textContent = `سورة ${state.currentSurah.name}`;
+}
+
+function clearSelection() {
+  state.selectedAyahs = [];
+  const ayahs = state.quranCache[state.currentSurah.n];
+  document.getElementById('surahContent').innerHTML = renderAyahsList(ayahs);
+  updateSelectionInfo();
+}
+
+function filterAyahs() {
+  const q = document.getElementById('ayahSearch').value.trim();
+  const ayahs = state.quranCache[state.currentSurah.n];
+  if (!ayahs) return;
+  if (!q) {
+    document.getElementById('surahContent').innerHTML = renderAyahsList(ayahs);
+    return;
+  }
+  const filtered = ayahs.filter(a => a.text.includes(q) || String(a.numberInSurah) === q);
+  if (filtered.length === 0) {
+    document.getElementById('surahContent').innerHTML = '<div class="text-center py-10 text-gray-500">لا توجد نتائج</div>';
+    return;
+  }
+  document.getElementById('surahContent').innerHTML = `
+    <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100">
+      <p class="text-sm text-gray-600 mb-4">نتائج البحث: ${filtered.length} آية</p>
+      <div class="quran-text text-center leading-loose">
+        ${filtered.map(a => `<span class="inline">${a.text} <span class="ayah-number">${a.numberInSurah}</span></span>`).join(' ')}
+      </div>
+    </div>
+  `;
+}
+
+function startCreationFromSelection() {
+  if (state.selectedAyahs.length === 0) {
+    showToast('اختر آيات أولاً', 'error');
+    return;
+  }
+  state.creationWizard = {
+    step: 2,
+    surah: state.currentSurah.n,
+    startAyah: state.selectedAyahs[0],
+    endAyah: state.selectedAyahs[state.selectedAyahs.length-1],
+    selectedAyahs: [...state.selectedAyahs],
+    type: 'story',
+    artStyle: 'cartoon',
+    estimatedPages: Math.min(state.selectedAyahs.length, 10)
+  };
+  navigate('create');
+}
+
+/* =========================================================
+   CREATE WIZARD
+   ========================================================= */
+function renderCreateWizard() {
+  const w = state.creationWizard;
+  const steps = [
+    {n: 1, t: 'السورة'},
+    {n: 2, t: 'الآيات'},
+    {n: 3, t: 'النوع'},
+    {n: 4, t: 'الأسلوب'},
+    {n: 5, t: 'إنشاء'}
+  ];
+  
+  return `
+    <section class="fade-in">
+      <div class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-black text-brand-800 mb-2">إنشاء قصة جديدة</h1>
+        <p class="text-gray-600">اتبع الخطوات لإنشاء محتوى قرآني مصور</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-brand-100 mb-6">
+        <div class="flex items-center justify-between">
+          ${steps.map((s, i) => `
+            <div class="flex items-center ${i < steps.length-1 ? 'flex-1' : ''}">
+              <div class="progress-step w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center font-bold text-sm ${w.step > s.n ? 'done' : w.step === s.n ? 'active' : 'bg-gray-100 text-gray-400'}">
+                ${w.step > s.n ? '✓' : s.n}
+              </div>
+              ${i < steps.length-1 ? `<div class="flex-1 h-1 mx-2 rounded ${w.step > s.n ? 'bg-brand-500' : 'bg-gray-200'}"></div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+        <div class="text-center mt-3">
+          <p class="text-sm font-semibold text-brand-700">${steps[w.step-1].t}</p>
+        </div>
+      </div>
+
+      <!-- Step content -->
+      <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-brand-100">
+        ${renderWizardStep(w.step)}
+      </div>
+    </section>
+  `;
+}
+
+function renderWizardStep(step) {
+  const w = state.creationWizard;
+  if (step === 1) {
+    return `
+      <h2 class="text-xl font-bold text-brand-800 mb-4">اختر السورة</h2>
+      <input id="wizardSurahSearch" oninput="filterWizardSurahs()" type="text" placeholder="ابحث عن سورة..." class="w-full px-4 py-3 rounded-xl border border-gray-200 mb-4">
+      <div id="wizardSurahsGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 max-h-96 overflow-y-auto scroll-hide">
+        ${SURAHS_META.map(s => `
+          <button onclick="selectWizardSurah(${s.n})" class="p-3 rounded-xl border-2 ${w.surah===s.n?'border-brand-500 bg-brand-50':'border-gray-200 hover:border-brand-300'} text-center transition">
+            <div class="text-lg font-black text-brand-700">${s.n}</div>
+            <div class="text-xs font-semibold text-gray-700 truncate">${s.name}</div>
+          </button>
+        `).join('')}
+      </div>
+      <div class="flex justify-between mt-6">
+        <button onclick="navigate('home')" class="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">إلغاء</button>
+        <button onclick="nextWizardStep()" ${!w.surah?'disabled':''} class="btn-primary px-6 py-2.5 rounded-xl text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed">التالي ←</button>
+      </div>
+    `;
+  }
+  if (step === 2) {
+    const surah = SURAHS_META.find(s => s.n === w.surah);
+    return `
+      <h2 class="text-xl font-bold text-brand-800 mb-2">اختر الآيات من سورة ${surah.name}</h2>
+      <p class="text-sm text-gray-600 mb-4">عدد الآيات: ${surah.ayahs}</p>
+      <div class="grid md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">من آية</label>
+          <input id="wStart" type="number" min="1" max="${surah.ayahs}" value="${w.startAyah||1}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-center font-bold">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">إلى آية</label>
+          <input id="wEnd" type="number" min="1" max="${surah.ayahs}" value="${w.endAyah||Math.min(5,surah.ayahs)}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-center font-bold">
+        </div>
+      </div>
+      <div class="bg-brand-50 border border-brand-200 rounded-xl p-4 mb-4">
+        <p class="text-sm text-brand-800"><span class="font-bold">ملاحظة:</span> سيتم جلب النص القرآني من المصدر الموثوق والتحقق منه قبل الإنشاء.</p>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="prevWizardStep()" class="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">→ السابق</button>
+        <button onclick="nextWizardStep()" class="btn-primary px-6 py-2.5 rounded-xl text-white font-semibold">التالي ←</button>
+      </div>
+    `;
+  }
+  if (step === 3) {
+    return `
+      <h2 class="text-xl font-bold text-brand-800 mb-4">اختر نوع المحتوى</h2>
+      <div class="grid md:grid-cols-3 gap-4">
+        ${[
+          {v: 'story', t: 'قصة قرآنية', d: 'عندما تحتوي الآيات على أحداث مترابطة', i: '📚'},
+          {v: 'explain', t: 'شرح مصور للأطفال', d: 'شرح مبسط للآيات مع رسومات', i: '🎓'},
+          {v: 'sequential', t: 'عرض متسلسل', d: 'عرض الآيات بالترتيب مع شرح', i: '📖'}
+        ].map(o => `
+          <button onclick="selectWizardType('${o.v}')" class="p-6 rounded-2xl border-2 ${w.type===o.v?'border-brand-500 bg-brand-50':'border-gray-200 hover:border-brand-300'} text-right transition">
+            <div class="text-4xl mb-2">${o.i}</div>
+            <h3 class="font-bold text-lg text-brand-800 mb-1">${o.t}</h3>
+            <p class="text-sm text-gray-600">${o.d}</p>
+          </button>
+        `).join('')}
+      </div>
+      <div class="flex justify-between mt-6">
+        <button onclick="prevWizardStep()" class="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">→ السابق</button>
+        <button onclick="nextWizardStep()" class="btn-primary px-6 py-2.5 rounded-xl text-white font-semibold">التالي ←</button>
+      </div>
+    `;
+  }
+  if (step === 4) {
+    return `
+      <h2 class="text-xl font-bold text-brand-800 mb-4">اختر أسلوب الرسم</h2>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        ${[
+          {v: 'cartoon', t: 'كرتوني تربوي', i: '🎨', c: 'from-pink-400 to-orange-400'},
+          {v: 'watercolor', t: 'ألوان مائية', i: '💧', c: 'from-blue-400 to-cyan-400'},
+          {v: 'storybook', t: 'كتاب قصص', i: '📖', c: 'from-amber-400 to-yellow-400'},
+          {v: 'kids', t: 'رسوم أطفال', i: '🧸', c: 'from-purple-400 to-pink-400'},
+          {v: 'print', t: 'مناسب للطباعة', i: '🖨️', c: 'from-gray-400 to-slate-500'},
+          {v: 'flat', t: 'تصميم مسطح', i: '✨', c: 'from-green-400 to-teal-400'}
+        ].map(o => `
+          <button onclick="selectWizardStyle('${o.v}')" class="p-5 rounded-2xl border-2 ${w.artStyle===o.v?'border-brand-500 bg-brand-50':'border-gray-200 hover:border-brand-300'} text-center transition">
+            <div class="w-16 h-16 mx-auto mb-2 rounded-xl bg-gradient-to-br ${o.c} flex items-center justify-center text-3xl">${o.i}</div>
+            <h3 class="font-bold text-brand-800">${o.t}</h3>
+          </button>
+        `).join('')}
+      </div>
+      <div class="mt-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">عدد الصفحات التقريبي: <span id="pagesCount">${w.estimatedPages}</span></label>
+        <input type="range" min="1" max="20" value="${w.estimatedPages}" oninput="document.getElementById('pagesCount').textContent=this.value; state.creationWizard.estimatedPages=parseInt(this.value)" class="w-full accent-brand-500">
+      </div>
+      <div class="flex justify-between mt-6">
+        <button onclick="prevWizardStep()" class="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">→ السابق</button>
+        <button onclick="nextWizardStep()" class="btn-primary px-6 py-2.5 rounded-xl text-white font-semibold">التالي ←</button>
+      </div>
+    `;
+  }
+  if (step === 5) {
+    const surah = SURAHS_META.find(s => s.n === w.surah);
+    return `
+      <h2 class="text-xl font-bold text-brand-800 mb-4">مراجعة وإنشاء</h2>
+      <div class="bg-gradient-to-br from-brand-50 to-sky-brand-50 rounded-2xl p-6 mb-6 border border-brand-200">
+        <div class="grid md:grid-cols-2 gap-4 text-sm">
+          <div><span class="text-gray-600">السورة:</span> <span class="font-bold text-brand-800">${surah.name}</span></div>
+          <div><span class="text-gray-600">الآيات:</span> <span class="font-bold text-brand-800">${w.startAyah} - ${w.endAyah}</span></div>
+          <div><span class="text-gray-600">النوع:</span> <span class="font-bold text-brand-800">${({story:'قصة قرآنية',explain:'شرح مصور',sequential:'عرض متسلسل'})[w.type]}</span></div>
+          <div><span class="text-gray-600">الأسلوب:</span> <span class="font-bold text-brand-800">${w.artStyle}</span></div>
+        </div>
+      </div>
+      <div class="bg-gold-400/20 border border-gold-400 rounded-xl p-4 mb-6">
+        <p class="text-sm text-brand-900"><strong>⚠️ تنبيه:</strong> سيتم جلب النص القرآني من المصدر الموثوق والتحقق منه. لن يتم تغيير أو اختصار أو إضافة أي كلمة.</p>
+      </div>
+      <div class="flex justify-between">
+        <button onclick="prevWizardStep()" class="px-5 py-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold">→ السابق</button>
+        <button onclick="startCreation()" class="btn-primary px-8 py-3 rounded-xl text-white font-bold text-lg flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          إنشاء الصفحات
+        </button>
+      </div>
+    `;
+  }
+}
+
+function filterWizardSurahs() {
+  const q = document.getElementById('wizardSurahSearch').value.trim().toLowerCase();
+  const filtered = SURAHS_META.filter(s => !q || s.name.includes(q) || String(s.n) === q);
+  document.getElementById('wizardSurahsGrid').innerHTML = filtered.map(s => `
+    <button onclick="selectWizardSurah(${s.n})" class="p-3 rounded-xl border-2 ${state.creationWizard.surah===s.n?'border-brand-500 bg-brand-50':'border-gray-200 hover:border-brand-300'} text-center transition">
+      <div class="text-lg font-black text-brand-700">${s.n}</div>
+      <div class="text-xs font-semibold text-gray-700 truncate">${s.name}</div>
+    </button>
+  `).join('');
+}
+
+function selectWizardSurah(n) {
+  state.creationWizard.surah = n;
+  render();
+}
+function selectWizardType(v) {
+  state.creationWizard.type = v;
+  render();
+}
+function selectWizardStyle(v) {
+  state.creationWizard.artStyle = v;
+  render();
+}
+
+function nextWizardStep() {
+  const w = state.creationWizard;
+  if (w.step === 1 && !w.surah) { showToast('اختر سورة', 'error'); return; }
+  if (w.step === 2) {
+    const surah = SURAHS_META.find(s => s.n === w.surah);
+    const start = parseInt(document.getElementById('wStart').value);
+    const end = parseInt(document.getElementById('wEnd').value);
+    if (isNaN(start) || isNaN(end) || start < 1 || end > surah.ayahs || start > end) {
+      showToast('نطاق غير صحيح', 'error'); return;
+    }
+    w.startAyah = start; w.endAyah = end;
+  }
+  w.step++;
+  render();
+}
+function prevWizardStep() {
+  if (state.creationWizard.step > 1) {
+    state.creationWizard.step--;
+    render();
+  }
+}
+
+/* =========================================================
+   CREATION PROCESS
+   ========================================================= */
+async function startCreation() {
+  const w = state.creationWizard;
+  const surah = SURAHS_META.find(s => s.n === w.surah);
+  
+  // Show progress modal
+  showModal(renderCreationProgress());
+  
+  const steps = [
+    {t: 'جاري قراءة الآيات...', d: 800},
+    {t: 'جاري التحقق من النص القرآني...', d: 1000},
+    {t: 'جاري تحليل الآيات...', d: 900},
+    {t: 'جاري تحديد الأحداث...', d: 800},
+    {t: 'جاري تقسيم المشاهد...', d: 900},
+    {t: 'جاري إنشاء الرسومات...', d: 1500},
+    {t: 'جاري تجهيز النصوص...', d: 800},
+    {t: 'جاري تركيب الصفحات...', d: 1200}
+  ];
+  
+  for (let i = 0; i < steps.length; i++) {
+    updateProgressStep(i, steps[i].t);
+    await sleep(steps[i].d);
+  }
+  
+  // Fetch actual ayahs
+  updateProgressStep(steps.length, 'جاري جلب الآيات من المصدر الموثوق...');
+  const ayahs = await fetchSurahsAyahsRange(w.surah, w.startAyah, w.endAyah);
+  if (!ayahs) {
+    closeModal();
+    showToast('تعذر التحقق من النص القرآني، يرجى المحاولة مرة أخرى', 'error');
+    return;
+  }
+  
+  // Verify
+  updateProgressStep(steps.length+1, 'جاري التحقق من صحة النص...');
+  await sleep(600);
+  const verified = verifyAyahs(ayahs, w.surah, w.startAyah, w.endAyah);
+  if (!verified) {
+    closeModal();
+    showToast('تعذر التحقق من النص القرآني، يرجى المحاولة مرة أخرى', 'error');
+    return;
+  }
+  
+  // Generate pages
+  updateProgressStep(steps.length+2, 'جاري إنشاء الصفحات المصورة...');
+  const pages = await generateStoryPages(ayahs, w);
+  
+  // Create story
+  const story = {
+    id: 'story_' + Date.now(),
+    title: w.type === 'story' ? `قصة من سورة ${surah.name}` : `شرح مصور من سورة ${surah.name}`,
+    surahNumber: w.surah,
+    surahName: surah.name,
+    startAyah: w.startAyah,
+    endAyah: w.endAyah,
+    type: w.type,
+    artStyle: w.artStyle,
+    pages: pages,
+    status: 'draft',
+    createdAt: new Date().toISOString(),
+    createdBy: state.currentUser?.name || 'مستخدم'
+  };
+  
+  state.stories.unshift(story);
+  localStorage.setItem('quranStories', JSON.stringify(state.stories));
+  
+  updateProgressStep(steps.length+3, 'تم إنشاء المحتوى بنجاح ✓');
+  await sleep(1000);
+  closeModal();
+  
+  state.currentStory = story;
+  navigate('story');
+  showToast('تم إنشاء القصة بنجاح', 'success');
+}
+
+async function fetchSurahsAyahsRange(surahNum, start, end) {
+  const all = await fetchSurahAyahs(surahNum);
+  if (!all) return null;
+  return all.filter(a => a.numberInSurah >= start && a.numberInSurah <= end);
+}
+
+function verifyAyahs(ayahs, surahNum, start, end) {
+  if (!ayahs || ayahs.length === 0) return false;
+  const expectedCount = end - start + 1;
+  if (ayahs.length !== expectedCount) return false;
+  for (let i = 0; i < ayahs.length; i++) {
+    const a = ayahs[i];
+    if (a.surahNumber !== surahNum) return false;
+    if (a.numberInSurah !== start + i) return false;
+    if (!a.text || a.text.trim().length === 0) return false;
+  }
+  return true;
+}
+
+/* =========================================================
+   PAGE GENERATION
+   ========================================================= */
+async function generateStoryPages(ayahs, wizard) {
+  const surah = SURAHS_META.find(s => s.n === wizard.surah);
+  const pages = [];
+  
+  // Cover page
+  pages.push({
+    pageNumber: 0,
+    type: 'cover',
+    title: wizard.type === 'story' ? `قصة من سورة ${surah.name}` : `شرح مصور من سورة ${surah.name}`,
+    subtitle: 'من القرآن الكريم',
+    surahName: surah.name,
+    range: `${wizard.startAyah} - ${wizard.endAyah}`,
+    imageUrl: await generatePageImage({
+      type: 'cover',
+      title: wizard.type === 'story' ? `قصة من سورة ${surah.name}` : `شرح مصور`,
+      surahName: surah.name,
+      artStyle: wizard.artStyle
+    })
+  });
+  
+  // Content pages
+  for (let i = 0; i < ayahs.length; i++) {
+    const ayah = ayahs[i];
+    const scene = analyzeAyahForScene(ayah, wizard.type, i, ayahs.length);
+    const imageUrl = await generatePageImage({
+      type: 'content',
+      scene: scene,
+      artStyle: wizard.artStyle,
+      surahName: surah.name
+    });
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Tailwind script
-        function initializeTailwind() {
-            document.documentElement.style.setProperty('--accent', '#0f766e');
-        }
-        
-        // All 114 Surahs data (real names + ayah counts)
-        const surahs = [
-            {id:1, number:1, name:"الفاتحة", ayahs:7},
-            {id:2, number:2, name:"البقرة", ayahs:286},
-            {id:3, number:3, name:"آل عمران", ayahs:200},
-            {id:4, number:4, name:"النساء", ayahs:176},
-            {id:5, number:5, name:"المائدة", ayahs:120},
-            {id:6, number:6, name:"الأنعام", ayahs:165},
-            {id:7, number:7, name:"الأعراف", ayahs:206},
-            {id:8, number:8, name:"الأنفال", ayahs:75},
-            {id:9, number:9, name:"التوبة", ayahs:129},
-            {id:10, number:10, name:"يونس", ayahs:109},
-            {id:11, number:11, name:"هود", ayahs:123},
-            {id:12, number:12, name:"يوسف", ayahs:111},
-            {id:13, number:13, name:"الرعد", ayahs:43},
-            {id:14, number:14, name:"إبراهيم", ayahs:52},
-            {id:15, number:15, name:"الحجر", ayahs:99},
-            {id:16, number:16, name:"النحل", ayahs:128},
-            {id:17, number:17, name:"الإسراء", ayahs:111},
-            {id:18, number:18, name:"الكهف", ayahs:110},
-            {id:19, number:19, name:"مريم", ayahs:98},
-            {id:20, number:20, name:"طه", ayahs:135},
-            // ... (remaining surahs abbreviated for length but all are included in real use)
-            {id:21, number:21, name:"الأنبياء", ayahs:112},
-            {id:22, number:22, name:"الحج", ayahs:78},
-            {id:23, number:23, name:"المؤمنون", ayahs:118},
-            {id:24, number:24, name:"النور", ayahs:64},
-            {id:25, number:25, name:"الفرقان", ayahs:77},
-            {id:26, number:26, name:"الشعراء", ayahs:227},
-            {id:27, number:27, name:"النمل", ayahs:93},
-            {id:28, number:28, name:"القصص", ayahs:88},
-            {id:29, number:29, name:"العنكبوت", ayahs:69},
-            {id:30, number:30, name:"الروم", ayahs:60},
-            {id:31, number:31, name:"لقمان", ayahs:34},
-            {id:32, number:32, name:"السجدة", ayahs:30},
-            {id:33, number:33, name:"الأحزاب", ayahs:73},
-            {id:34, number:34, name:"سبأ", ayahs:54},
-            {id:35, number:35, name:"فاطر", ayahs:45},
-            {id:36, number:36, name:"يس", ayahs:83},
-            {id:37, number:37, name:"الصافات", ayahs:182},
-            {id:38, number:38, name:"ص", ayahs:88},
-            {id:39, number:39, name:"الزمر", ayahs:75},
-            {id:40, number:40, name:"غافر", ayahs:85},
-            {id:41, number:41, name:"فصلت", ayahs:54},
-            {id:42, number:42, name:"الشورى", ayahs:53},
-            {id:43, number:43, name:"الزخرف", ayahs:89},
-            {id:44, number:44, name:"الدخان", ayahs:59},
-            {id:45, number:45, name:"الجاثية", ayahs:37},
-            {id:46, number:46, name:"الأحقاف", ayahs:35},
-            {id:47, number:47, name:"محمد", ayahs:38},
-            {id:48, number:48, name:"الفتح", ayahs:29},
-            {id:49, number:49, name:"الحجرات", ayahs:18},
-            {id:50, number:50, name:"ق", ayahs:45},
-            {id:51, number:51, name:"الذاريات", ayahs:60},
-            {id:52, number:52, name:"الطور", ayahs:49},
-            {id:53, number:53, name:"النجم", ayahs:62},
-            {id:54, number:54, name:"القمر", ayahs:55},
-            {id:55, number:55, name:"الرحمن", ayahs:78},
-            {id:56, number:56, name:"الواقعة", ayahs:96},
-            {id:57, number:57, name:"الحديد", ayahs:29},
-            {id:58, number:58, name:"المجادلة", ayahs:22},
-            {id:59, number:59, name:"الحشر", ayahs:24},
-            {id:60, number:60, name:"الممتحنة", ayahs:13},
-            {id:61, number:61, name:"الصف", ayahs:14},
-            {id:62, number:62, name:"الجمعة", ayahs:11},
-            {id:63, number:63, name:"المنافقون", ayahs:11},
-            {id:64, number:64, name:"التغابن", ayahs:18},
-            {id:65, number:65, name:"الطلاق", ayahs:12},
-            {id:66, number:66, name:"التحريم", ayahs:12},
-            {id:67, number:67, name:"الملك", ayahs:30},
-            {id:68, number:68, name:"القلم", ayahs:52},
-            {id:69, number:69, name:"الحاقة", ayahs:52},
-            {id:70, number:70, name:"المعارج", ayahs:44},
-            {id:71, number:71, name:"نوح", ayahs:28},
-            {id:72, number:72, name:"الجن", ayahs:28},
-            {id:73, number:73, name:"المزمل", ayahs:20},
-            {id:74, number:74, name:"المدثر", ayahs:56},
-            {id:75, number:75, name:"القيامة", ayahs:40},
-            {id:76, number:76, name:"الإنسان", ayahs:31},
-            {id:77, number:77, name:"المرسلات", ayahs:50},
-            {id:78, number:78, name:"النبأ", ayahs:40},
-            {id:79, number:79, name:"النازعات", ayahs:46},
-            {id:80, number:80, name:"عبس", ayahs:42},
-            {id:81, number:81, name:"التكوير", ayahs:29},
-            {id:82, number:82, name:"الانفطار", ayahs:19},
-            {id:83, number:83, name:"المطففين", ayahs:36},
-            {id:84, number:84, name:"الانشقاق", ayahs:25},
-            {id:85, number:85, name:"البروج", ayahs:22},
-            {id:86, number:86, name:"الطارق", ayahs:17},
-            {id:87, number:87, name:"الأعلى", ayahs:19},
-            {id:88, number:88, name:"الغاشية", ayahs:26},
-            {id:89, number:89, name:"الفجر", ayahs:30},
-            {id:90, number:90, name:"البلد", ayahs:20},
-            {id:91, number:91, name:"الشمس", ayahs:15},
-            {id:92, number:92, name:"الليل", ayahs:21},
-            {id:93, number:93, name:"الضحى", ayahs:11},
-            {id:94, number:94, name:"الشرح", ayahs:8},
-            {id:95, number:95, name:"التين", ayahs:8},
-            {id:96, number:96, name:"العلق", ayahs:19},
-            {id:97, number:97, name:"القدر", ayahs:5},
-            {id:98, number:98, name:"البينة", ayahs:8},
-            {id:99, number:99, name:"الزلزلة", ayahs:8},
-            {id:100, number:100, name:"العاديات", ayahs:11},
-            {id:101, number:101, name:"القارعة", ayahs:11},
-            {id:102, number:102, name:"التكاثر", ayahs:8},
-            {id:103, number:103, name:"العصر", ayahs:3},
-            {id:104, number:104, name:"الهمزة", ayahs:9},
-            {id:105, number:105, name:"الفيل", ayahs:5},
-            {id:106, number:106, name:"قريش", ayahs:4},
-            {id:107, number:107, name:"الماعون", ayahs:7},
-            {id:108, number:108, name:"الكوثر", ayahs:3},
-            {id:109, number:109, name:"الكافرون", ayahs:6},
-            {id:110, number:110, name:"النصر", ayahs:3},
-            {id:111, number:111, name:"المسد", ayahs:5},
-            {id:112, number:112, name:"الإخلاص", ayahs:4},
-            {id:113, number:113, name:"الفلق", ayahs:5},
-            {id:114, number:114, name:"الناس", ayahs:6}
-        ]
-        
-        let currentSurah = null
-        let stories = []
-        
-        function renderSurahs(filteredSurahs = surahs) {
-            const grid = document.getElementById('surahs-grid')
-            grid.innerHTML = ''
-            
-            filteredSurahs.forEach(surah => {
-                const card = document.createElement('div')
-                card.className = `surah-card bg-white border border-slate-200 p-5 rounded-3xl cursor-pointer hover:border-teal-300`
-                card.innerHTML = `
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <div class="text-xs font-bold px-3 py-1 bg-teal-50 text-teal-700 w-fit rounded-full">${surah.number}</div>
-                            <div class="mt-4 text-xl font-extrabold">${surah.name}</div>
-                            <div class="text-sm text-slate-500 mt-1">${surah.ayahs} آية</div>
-                        </div>
-                        <div class="text-teal-200">
-                            <i class="fa-solid fa-book text-4xl"></i>
-                        </div>
-                    </div>
-                    <button onclick="event.stopImmediatePropagation(); openSurahModal(${surah.id})" 
-                            class="mt-6 w-full py-2 text-sm bg-teal-700 hover:bg-teal-800 text-white rounded-2xl font-bold transition-colors">
-                        فتح السورة
-                    </button>
-                `
-                card.onclick = () => openSurahModal(surah.id)
-                grid.appendChild(card)
-            })
-        }
-        
-        function filterSurahs() {
-            const term = document.getElementById('surah-search').value.trim().toLowerCase()
-            const filtered = surahs.filter(s => 
-                s.name.includes(term) || s.number.toString() === term
-            )
-            renderSurahs(filtered)
-        }
-        
-        function openSurahModal(surahId) {
-            currentSurah = surahs.find(s => s.id === surahId)
-            if (!currentSurah) return
-            
-            document.getElementById('modal-surah-name').innerHTML = currentSurah.name
-            document.getElementById('modal-surah-number').innerHTML = `سورة رقم ${currentSurah.number}`
-            document.getElementById('modal-ayah-count').innerHTML = `${currentSurah.ayahs} آية`
-            
-            document.getElementById('start-ayah').value = 1
-            document.getElementById('start-ayah').max = currentSurah.ayahs
-            document.getElementById('end-ayah').value = Math.min(10, currentSurah.ayahs)
-            document.getElementById('end-ayah').max = currentSurah.ayahs
-            
-            document.getElementById('surah-modal').classList.remove('hidden')
-            document.getElementById('surah-modal').classList.add('flex')
-        }
-        
-        function hideSurahModal() {
-            const modal = document.getElementById('surah-modal')
-            modal.classList.remove('flex')
-            modal.classList.add('hidden')
-        }
-        
-        function createStoryFromSurah() {
-            hideSurahModal()
-            const start = parseInt(document.getElementById('start-ayah').value) || 1
-            const end = parseInt(document.getElementById('end-ayah').value) || currentSurah.ayahs
-            
-            showCreationProgress(currentSurah, start, end, 'story')
-        }
-        
-        function createExplanation() {
-            hideSurahModal()
-            const start = parseInt(document.getElementById('start-ayah').value) || 1
-            const end = parseInt(document.getElementById('end-ayah').value) || currentSurah.ayahs
-            
-            showCreationProgress(currentSurah, start, end, 'explanation')
-        }
-        
-        function showCreationProgress(surah, startAyah, endAyah, type) {
-            const modal = document.getElementById('progress-modal')
-            modal.style.display = 'flex'
-            
-            const stepsContainer = document.getElementById('progress-steps')
-            stepsContainer.innerHTML = ''
-            
-            const steps = [
-                "جاري قراءة الآيات من قاعدة البيانات...",
-                "جاري التحقق من النص القرآني...",
-                "جاري تحليل الآيات...",
-                "جاري تحديد المشاهد...",
-                "جاري إنشاء الرسومات...",
-                "جاري تركيب الصفحات..."
-            ]
-            
-            let currentStep = 0
-            const progressBar = document.getElementById('progress-bar')
-            
-            const interval = setInterval(() => {
-                if (currentStep < steps.length) {
-                    const stepEl = document.createElement('div')
-                    stepEl.className = `flex items-center gap-x-3 text-sm py-1`
-                    stepEl.innerHTML = `
-                        <i class="fa-solid fa-check text-emerald-500"></i>
-                        <span>${steps[currentStep]}</span>
-                    `
-                    stepsContainer.appendChild(stepEl)
-                    progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`
-                    currentStep++
-                } else {
-                    clearInterval(interval)
-                    
-                    setTimeout(() => {
-                        modal.style.display = 'none'
-                        showGeneratedStory(surah, startAyah, endAyah, type)
-                    }, 800)
-                }
-            }, 650)
-        }
-        
-        function showGeneratedStory(surah, start, end, type) {
-            const isStory = type === 'story'
-            const title = isStory ? `قصة ${surah.name}` : `شرح مصور من سورة ${surah.name}`
-            
-            const storyHTML = `
-                <div class="max-w-screen-xl mx-auto px-6 pt-8">
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <div class="flex items-center gap-x-3">
-                                <span class="px-4 py-1 text-xs font-bold bg-emerald-100 text-emerald-700 rounded-full">منشور</span>
-                                <span class="text-sm text-slate-500">${surah.name} - الآيات ${start} إلى ${end}</span>
-                            </div>
-                            <h2 class="text-4xl font-extrabold mt-1">${title}</h2>
-                        </div>
-                        
-                        <div class="flex gap-3">
-                            <button onclick="downloadAllPages()" class="px-5 py-3 bg-white border text-sm font-bold rounded-2xl flex items-center gap-x-2">
-                                <i class="fa-solid fa-download"></i>
-                                <span>تحميل جميع الصور</span>
-                            </button>
-                            <button onclick="showLibrary()" class="px-5 py-3 bg-teal-700 text-white text-sm font-bold rounded-2xl">العودة للمكتبة</button>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        ${createStoryPages(surah, start, end, isStory)}
-                    </div>
+    pages.push({
+      pageNumber: i + 1,
+      type: 'content',
+      ayahNumber: ayah.numberInSurah,
+      quranText: ayah.text,
+      surahName: surah.name,
+      sceneTitle: scene.title,
+      sceneDescription: scene.description,
+      explanation: scene.explanation,
+      lesson: scene.lesson,
+      imageUrl: imageUrl
+    });
+  }
+  
+  return pages;
+}
+
+function analyzeAyahForScene(ayah, type, idx, total) {
+  const text = ayah.text;
+  // Simple heuristic analysis for scene generation
+  const isStoryAyah = /يوسف|موسى|إبراهيم|نوح|عيسى|محمد|داود|سليمان|أيوب|يونس|زكريا|يحيى|هود|صالح|شعيب|لوط|إسماعيل|إسحاق|يعقوب|آدم/.test(text);
+  const hasNature = /سماء|أرض|شمس|قمر|نجوم|بحر|جبال|أنهار|شجر|نبات|مطر/.test(text);
+  const hasPeople = /قوم|ناس|أهل|قرية|ملأ/.test(text);
+  const hasReward = /جنة|نعيم|أجر|ثواب|رحمة/.test(text);
+  const hasWarning = /نار|عذاب|عقوبة|نذير/.test(text);
+  
+  let title, description, explanation, lesson;
+  
+  if (type === 'story' && isStoryAyah) {
+    title = `المشهد ${idx + 1}`;
+    description = 'مشهد من القصة القرآنية';
+    explanation = 'يروي هذا المشهد جزءًا من القصة التي ذكرها الله في كتابه الكريم.';
+    lesson = 'نتعلم من قصص الأنبياء الصبر والثقة بالله';
+  } else if (hasNature) {
+    title = 'آيات الله في الكون';
+    description = 'مشهد يعظم خلق الله في الطبيعة';
+    explanation = 'يدعونا الله للتأمل في خلقه العظيم من حولنا.';
+    lesson = 'الله خالق كل شيء وهو على كل شيء قدير';
+  } else if (hasReward) {
+    title = 'ثواب المؤمنين';
+    description = 'مشهد يعبر عن نعيم الجنة';
+    explanation = 'وعد الله المؤمنين بالجنة والنعيم العظيم.';
+    lesson = 'الجنة هي جزاء من آمن وعمل صالحًا';
+  } else if (hasWarning) {
+    title = 'عبرة وعظة';
+    description = 'مشهد تحذيري يعظ المؤمنين';
+    explanation = 'يحذرنا الله من المعصية ويدعونا للتوبة.';
+    lesson = 'الله غفور رحيم يقبل توبة عباده';
+  } else {
+    title = `الآية ${ayah.numberInSurah}`;
+    description = 'شرح مبسط للآية الكريمة';
+    explanation = 'آية كريمة من كتاب الله تدعونا للتدبر والعمل.';
+    lesson = 'القرآن نور وهدى للمؤمنين';
+  }
+  
+  return { title, description, explanation, lesson };
+}
+
+async function generatePageImage(config) {
+  // Generate image using Canvas
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1350;
+  const ctx = canvas.getContext('2d');
+  
+  const styleColors = {
+    cartoon: { bg: ['#fef3c7', '#fde68a'], accent: '#f59e0b', decor: '#fb923c' },
+    watercolor: { bg: ['#dbeafe', '#bfdbfe'], accent: '#3b82f6', decor: '#60a5fa' },
+    storybook: { bg: ['#fef3c7', '#fed7aa'], accent: '#d97706', decor: '#f59e0b' },
+    kids: { bg: ['#fce7f3', '#fbcfe8'], accent: '#ec4899', decor: '#f472b6' },
+    print: { bg: ['#f3f4f6', '#e5e7eb'], accent: '#4b5563', decor: '#6b7280' },
+    flat: { bg: ['#d1fae5', '#a7f3d0'], accent: '#059669', decor: '#10b981' }
+  };
+  const colors = styleColors[config.artStyle] || styleColors.cartoon;
+  
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, colors.bg[0]);
+  grad.addColorStop(1, colors.bg[1]);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Decorative pattern
+  drawIslamicPattern(ctx, canvas.width, canvas.height, colors.decor);
+  
+  if (config.type === 'cover') {
+    drawCoverPage(ctx, canvas.width, canvas.height, config, colors);
+  } else {
+    drawContentPage(ctx, canvas.width, canvas.height, config, colors);
+  }
+  
+  return canvas.toDataURL('image/png');
+}
+
+function drawIslamicPattern(ctx, w, h, color) {
+  ctx.save();
+  ctx.globalAlpha = 0.15;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  const size = 80;
+  for (let x = 0; x < w; x += size) {
+    for (let y = 0; y < h; y += size) {
+      ctx.beginPath();
+      ctx.moveTo(x + size/2, y);
+      ctx.lineTo(x + size, y + size/2);
+      ctx.lineTo(x + size/2, y + size);
+      ctx.lineTo(x, y + size/2);
+      ctx.closePath();
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.arc(x + size/2, y + size/2, size/4, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+
+function drawCoverPage(ctx, w, h, config, colors) {
+  // Central decorative circle
+  ctx.save();
+  const centerX = w / 2;
+  const centerY = h / 2 - 50;
+  
+  // Outer decorative ring
+  ctx.fillStyle = colors.accent;
+  ctx.globalAlpha = 0.2;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 380, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+  
+  // Inner circle
+  const innerGrad = ctx.createRadialGradient(centerX, centerY, 100, centerX, centerY, 320);
+  innerGrad.addColorStop(0, '#ffffff');
+  innerGrad.addColorStop(1, colors.bg[0]);
+  ctx.fillStyle = innerGrad;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 320, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Decorative border
+  ctx.strokeStyle = colors.accent;
+  ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 320, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, 300, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  // Stars decoration
+  drawStar(ctx, centerX - 200, centerY - 180, 20, colors.accent);
+  drawStar(ctx, centerX + 200, centerY - 180, 20, colors.accent);
+  drawStar(ctx, centerX - 220, centerY + 180, 15, colors.accent);
+  drawStar(ctx, centerX + 220, centerY + 180, 15, colors.accent);
+  
+  ctx.restore();
+  
+  // Text
+  ctx.textAlign = 'center';
+  ctx.direction = 'rtl';
+  
+  // Subtitle
+  ctx.fillStyle = colors.accent;
+  ctx.font = 'bold 36px Cairo';
+  ctx.fillText(config.subtitle || 'من القرآن الكريم', centerX, centerY - 120);
+  
+  // Title
+  ctx.fillStyle = '#14532d';
+  ctx.font = 'bold 72px Cairo';
+  wrapText(ctx, config.title, centerX, centerY - 20, 500, 80);
+  
+  // Surah info
+  ctx.fillStyle = '#78350f';
+  ctx.font = 'bold 42px Cairo';
+  ctx.fillText(`سورة ${config.surahName}`, centerX, centerY + 120);
+  
+  // Decorative divider
+  ctx.strokeStyle = colors.accent;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(centerX - 100, centerY + 150);
+  ctx.lineTo(centerX + 100, centerY + 150);
+  ctx.stroke();
+  drawStar(ctx, centerX, centerY + 150, 10, colors.accent);
+  
+  // Bottom branding
+  ctx.fillStyle = '#15803d';
+  ctx.font = 'bold 28px Cairo';
+  ctx.fillText('قصص القرآن للأطفال', centerX, h - 80);
+  
+  // Footer decoration
+  ctx.fillStyle = colors.accent;
+  ctx.globalAlpha = 0.3;
+  ctx.fillRect(0, h - 40, w, 40);
+  ctx.globalAlpha = 1;
+}
+
+function drawContentPage(ctx, w, h, config, colors) {
+  const scene = config.scene;
+  
+  // Header bar
+  ctx.fillStyle = colors.accent;
+  ctx.fillRect(0, 0, w, 100);
+  ctx.fillStyle = 'white';
+  ctx.font = 'bold 36px Cairo';
+  ctx.textAlign = 'center';
+  ctx.direction = 'rtl';
+  ctx.fillText(`${config.surahName} - ${scene.title}`, w/2, 65);
+  
+  // Scene illustration area
+  const illustY = 140;
+  const illustH = 500;
+  drawSceneIllustration(ctx, w/2, illustY + illustH/2, w - 100, illustH, scene, colors);
+  
+  // Quran text area
+  const quranY = illustY + illustH + 40;
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = colors.accent;
+  ctx.lineWidth = 3;
+  roundRect(ctx, 50, quranY, w - 100, 280, 20, true, true);
+  
+  // Decorative corners
+  drawCorner(ctx, 60, quranY + 10, colors.accent);
+  drawCorner(ctx, w - 60, quranY + 10, colors.accent, true);
+  
+  // Quran text
+  ctx.fillStyle = '#14532d';
+  ctx.font = '42px Scheherazade New, Amiri, serif';
+  ctx.textAlign = 'center';
+  ctx.direction = 'rtl';
+  wrapText(ctx, scene.quranText || '', w/2, quranY + 80, w - 160, 60);
+  
+  // Ayah number
+  ctx.fillStyle = colors.accent;
+  ctx.font = 'bold 28px Cairo';
+  ctx.fillText(`﴿ ${scene.ayahNumber} ﴾`, w/2, quranY + 250);
+  
+  // Explanation area
+  const expY = quranY + 310;
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  roundRect(ctx, 50, expY, w - 100, 180, 15, true, false);
+  
+  ctx.fillStyle = colors.accent;
+  ctx.font = 'bold 28px Cairo';
+  ctx.textAlign = 'right';
+  ctx.fillText('📚 شرح للأطفال:', w - 80, expY + 40);
+  
+  ctx.fillStyle = '#374151';
+  ctx.font = '24px Cairo';
+  wrapText(ctx, scene.explanation || '', w - 80, expY + 80, w - 160, 35, 'right');
+  
+  // Lesson area
+  const lesY = expY + 200;
+  ctx.fillStyle = colors.accent;
+  ctx.globalAlpha = 0.15;
+  roundRect(ctx, 50, lesY, w - 100, 120, 15, true, false);
+  ctx.globalAlpha = 1;
+  
+  ctx.fillStyle = colors.accent;
+  ctx.font = 'bold 26px Cairo';
+  ctx.textAlign = 'right';
+  ctx.fillText('💡 ماذا نتعلم؟', w - 80, lesY + 40);
+  
+  ctx.fillStyle = '#14532d';
+  ctx.font = '22px Cairo';
+  wrapText(ctx, scene.lesson || '', w - 80, lesY + 75, w - 160, 32, 'right');
+  
+  // Footer
+  ctx.fillStyle = colors.accent;
+  ctx.globalAlpha = 0.3;
+  ctx.fillRect(0, h - 30, w, 30);
+  ctx.globalAlpha = 1;
+}
+
+function drawSceneIllustration(ctx, cx, cy, w, h, scene, colors) {
+  // Background for illustration
+  const grad = ctx.createLinearGradient(cx - w/2, cy - h/2, cx + w/2, cy + h/2);
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(1, colors.bg[1]);
+  ctx.fillStyle = grad;
+  roundRect(ctx, cx - w/2, cy - h/2, w, h, 20, true, false);
+  
+  // Scene-specific illustration
+  const desc = (scene.description || '') + ' ' + (scene.title || '');
+  
+  if (/سماء|نجوم|قمر|شمس/.test(desc)) {
+    drawSkyScene(ctx, cx, cy, w, h, colors);
+  } else if (/بحر|ماء|نهر/.test(desc)) {
+    drawSeaScene(ctx, cx, cy, w, h, colors);
+  } else if (/جبال|أرض|صحراء/.test(desc)) {
+    drawMountainScene(ctx, cx, cy, w, h, colors);
+  } else if (/جنة|نعيم/.test(desc)) {
+    drawParadiseScene(ctx, cx, cy, w, h, colors);
+  } else if (/شجر|نبات|حديقة/.test(desc)) {
+    drawGardenScene(ctx, cx, cy, w, h, colors);
+  } else {
+    drawGenericScene(ctx, cx, cy, w, h, colors, scene);
+  }
+}
+
+function drawSkyScene(ctx, cx, cy, w, h, colors) {
+  // Sky gradient
+  const sky = ctx.createLinearGradient(cx, cy - h/2, cx, cy + h/2);
+  sky.addColorStop(0, '#60a5fa');
+  sky.addColorStop(1, '#bfdbfe');
+  ctx.fillStyle = sky;
+  ctx.fillRect(cx - w/2, cy - h/2, w, h);
+  
+  // Sun
+  const sunGrad = ctx.createRadialGradient(cx + 150, cy - 100, 20, cx + 150, cy - 100, 80);
+  sunGrad.addColorStop(0, '#fef3c7');
+  sunGrad.addColorStop(1, '#fbbf24');
+  ctx.fillStyle = sunGrad;
+  ctx.beginPath();
+  ctx.arc(cx + 150, cy - 100, 70, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Clouds
+  drawCloud(ctx, cx - 150, cy - 80, 1, '#ffffff');
+  drawCloud(ctx, cx + 50, cy - 150, 0.7, '#ffffff');
+  drawCloud(ctx, cx - 80, cy + 50, 0.8, '#ffffff');
+  
+  // Stars
+  for (let i = 0; i < 8; i++) {
+    drawStar(ctx, cx - 200 + i * 60, cy - 180 + (i%3) * 30, 8, '#fbbf24');
+  }
+}
+
+function drawSeaScene(ctx, cx, cy, w, h, colors) {
+  const sea = ctx.createLinearGradient(cx, cy - h/2, cx, cy + h/2);
+  sea.addColorStop(0, '#7dd3fc');
+  sea.addColorStop(0.5, '#0ea5e9');
+  sea.addColorStop(1, '#0369a1');
+  ctx.fillStyle = sea;
+  ctx.fillRect(cx - w/2, cy - h/2, w, h);
+  
+  // Waves
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = 3;
+  for (let i = 0; i < 5; i++) {
+    ctx.beginPath();
+    const y = cy - 100 + i * 60;
+    for (let x = cx - w/2; x < cx + w/2; x += 20) {
+      const yy = y + Math.sin((x + i * 30) / 30) * 10;
+      if (x === cx - w/2) ctx.moveTo(x, yy);
+      else ctx.lineTo(x, yy);
+    }
+    ctx.stroke();
+  }
+  
+  // Boat
+  ctx.fillStyle = '#78350f';
+  ctx.beginPath();
+  ctx.moveTo(cx - 60, cy + 80);
+  ctx.lineTo(cx + 60, cy + 80);
+  ctx.lineTo(cx + 40, cy + 120);
+  ctx.lineTo(cx - 40, cy + 120);
+  ctx.closePath();
+  ctx.fill();
+  
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.moveTo(cx, cy + 80);
+  ctx.lineTo(cx, cy - 20);
+  ctx.lineTo(cx + 50, cy + 60);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawMountainScene(ctx, cx, cy, w, h, colors) {
+  // Sky
+  const sky = ctx.createLinearGradient(cx, cy - h/2, cx, cy);
+  sky.addColorStop(0, '#fde68a');
+  sky.addColorStop(1, '#fed7aa');
+  ctx.fillStyle = sky;
+  ctx.fillRect(cx - w/2, cy - h/2, w, h);
+  
+  // Mountains
+  ctx.fillStyle = '#78350f';
+  ctx.beginPath();
+  ctx.moveTo(cx - w/2, cy + 100);
+  ctx.lineTo(cx - 150, cy - 100);
+  ctx.lineTo(cx - 50, cy + 50);
+  ctx.lineTo(cx + 50, cy - 150);
+  ctx.lineTo(cx + 200, cy + 100);
+  ctx.lineTo(cx + w/2, cy + 100);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Snow caps
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.moveTo(cx + 50, cy - 150);
+  ctx.lineTo(cx + 20, cy - 100);
+  ctx.lineTo(cx + 80, cy - 100);
+  ctx.closePath();
+  ctx.fill();
+  
+  // Ground
+  ctx.fillStyle = '#d97706';
+  ctx.fillRect(cx - w/2, cy + 100, w, h/2 - 100);
+}
+
+function drawParadiseScene(ctx, cx, cy, w, h, colors) {
+  const grad = ctx.createLinearGradient(cx, cy - h/2, cx, cy + h/2);
+  grad.addColorStop(0, '#fef3c7');
+  grad.addColorStop(1, '#fde68a');
+  ctx.fillStyle = grad;
+  ctx.fillRect(cx - w/2, cy - h/2, w, h);
+  
+  // Light rays
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  for (let i = 0; i < 8; i++) {
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - h/2);
+    const angle = (i / 8) * Math.PI - Math.PI/2;
+    ctx.lineTo(cx + Math.cos(angle) * w, cy - h/2 + Math.sin(angle) * h * 2);
+    ctx.lineTo(cx + Math.cos(angle + 0.1) * w, cy - h/2 + Math.sin(angle + 0.1) * h * 2);
+    ctx.closePath();
+    ctx.fill();
+  }
+  
+  // Trees
+  drawTree(ctx, cx - 200, cy + 100, 1.2);
+  drawTree(ctx, cx + 200, cy + 100, 1);
+  drawTree(ctx, cx, cy + 130, 0.8);
+  
+  // Flowers
+  for (let i = 0; i < 15; i++) {
+    const x = cx - w/2 + 50 + (i * 60) % (w - 100);
+    const y = cy + 150 + (i % 3) * 20;
+    drawFlower(ctx, x, y, 12, ['#ec4899', '#f59e0b', '#8b5cf6'][i%3]);
+  }
+}
+
+function drawGardenScene(ctx, cx, cy, w, h, colors) {
+  // Grass
+  const grass = ctx.createLinearGradient(cx, cy, cx, cy + h/2);
+  grass.addColorStop(0, '#86efac');
+  grass.addColorStop(1, '#22c55e');
+  ctx.fillStyle = grass;
+  ctx.fillRect(cx - w/2, cy, w, h/2);
+  
+  // Sky
+  ctx.fillStyle = '#bfdbfe';
+  ctx.fillRect(cx - w/2, cy - h/2, w, h/2);
+  
+  // Trees
+  drawTree(ctx, cx - 180, cy + 50, 1.3);
+  drawTree(ctx, cx + 180, cy + 50, 1.1);
+  drawTree(ctx, cx, cy + 80, 0.9);
+  
+  // Flowers
+  for (let i = 0; i < 20; i++) {
+    const x = cx - w/2 + 30 + (i * 50) % (w - 60);
+    const y = cy + 100 + (i % 4) * 25;
+    drawFlower(ctx, x, y, 10, ['#ec4899', '#f59e0b', '#8b5cf6', '#ef4444'][i%4]);
+  }
+}
+
+function drawGenericScene(ctx, cx, cy, w, h, colors, scene) {
+  // Soft background
+  const grad = ctx.createRadialGradient(cx, cy, 50, cx, cy, Math.max(w, h));
+  grad.addColorStop(0, '#ffffff');
+  grad.addColorStop(1, colors.bg[1]);
+  ctx.fillStyle = grad;
+  ctx.fillRect(cx - w/2, cy - h/2, w, h);
+  
+  // Central decorative element - open book
+  ctx.fillStyle = '#78350f';
+  roundRect(ctx, cx - 120, cy - 40, 240, 120, 10, true, false);
+  ctx.fillStyle = '#fef3c7';
+  roundRect(ctx, cx - 110, cy - 30, 105, 100, 5, true, false);
+  roundRect(ctx, cx + 5, cy - 30, 105, 100, 5, true, false);
+  
+  // Book lines
+  ctx.strokeStyle = '#d97706';
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 5; i++) {
+    ctx.beginPath();
+    ctx.moveTo(cx - 100, cy - 15 + i * 18);
+    ctx.lineTo(cx - 15, cy - 15 + i * 18);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + 15, cy - 15 + i * 18);
+    ctx.lineTo(cx + 100, cy - 15 + i * 18);
+    ctx.stroke();
+  }
+  
+  // Light glow
+  const glow = ctx.createRadialGradient(cx, cy - 80, 10, cx, cy - 80, 150);
+  glow.addColorStop(0, 'rgba(251, 191, 36, 0.4)');
+  glow.addColorStop(1, 'rgba(251, 191, 36, 0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cy - 80, 150, 0, Math.PI * 2);
+  ctx.fill();
+  
+  // Stars
+  drawStar(ctx, cx - 180, cy - 150, 15, '#fbbf24');
+  drawStar(ctx, cx + 180, cy - 150, 15, '#fbbf24');
+  drawStar(ctx, cx - 200, cy + 100, 10, '#fbbf24');
+  drawStar(ctx, cx + 200, cy + 100, 10, '#fbbf24');
+}
+
+function drawCloud(ctx, x, y, scale, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(0, 0, 30, 0, Math.PI * 2);
+  ctx.arc(30, -10, 35, 0, Math.PI * 2);
+  ctx.arc(60, 0, 30, 0, Math.PI * 2);
+  ctx.arc(30, 15, 30, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawTree(ctx, x, y, scale) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.scale(scale, scale);
+  // Trunk
+  ctx.fillStyle = '#78350f';
+  ctx.fillRect(-10, 0, 20, 60);
+  // Leaves
+  ctx.fillStyle = '#16a34a';
+  ctx.beginPath();
+  ctx.arc(0, -20, 45, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#22c55e';
+  ctx.beginPath();
+  ctx.arc(-15, -30, 30, 0, Math.PI * 2);
+  ctx.arc(15, -30, 30, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawFlower(ctx, x, y, size, color) {
+  ctx.fillStyle = color;
+  for (let i = 0; i < 5; i++) {
+    const angle = (i / 5) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.arc(x + Math.cos(angle) * size * 0.6, y + Math.sin(angle) * size * 0.6, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.fillStyle = '#fbbf24';
+  ctx.beginPath();
+  ctx.arc(x, y, size * 0.4, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawStar(ctx, x, y, size, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const angle = (i / 10) * Math.PI * 2 - Math.PI / 2;
+    const r = i % 2 === 0 ? size : size / 2;
+    const px = x + Math.cos(angle) * r;
+    const py = y + Math.sin(angle) * r;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawCorner(ctx, x, y, color, flip = false) {
+  ctx.save();
+  ctx.translate(x, y);
+  if (flip) ctx.scale(-1, 1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(30, 0);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, 30);
+  ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(5, 5, 3, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  if (fill) ctx.fill();
+  if (stroke) ctx.stroke();
+}
+
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, align = 'center') {
+  if (!text) return;
+  ctx.textAlign = align;
+  const words = text.split(' ');
+  let line = '';
+  let currentY = y;
+  const startX = align === 'right' ? x : x;
+  
+  for (let i = 0; i < words.length; i++) {
+    const testLine = line + words[i] + ' ';
+    const metrics = ctx.measureText(testLine);
+    if (metrics.width > maxWidth && i > 0) {
+      ctx.fillText(line.trim(), startX, currentY);
+      line = words[i] + ' ';
+      currentY += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line.trim(), startX, currentY);
+}
+
+/* =========================================================
+   STORY VIEW
+   ========================================================= */
+function renderStoryView() {
+  const story = state.currentStory;
+  if (!story) return '<div class="text-center py-10">لا توجد قصة</div>';
+  
+  return `
+    <section class="fade-in">
+      <div class="bg-gradient-to-br from-brand-600 to-sky-brand-700 text-white rounded-3xl p-6 md:p-10 mb-6 shadow-xl">
+        <button onclick="navigate('library')" class="bg-white/20 hover:bg-white/30 backdrop-blur px-4 py-2 rounded-lg text-sm mb-4 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+          العودة للمكتبة
+        </button>
+        <h1 class="text-3xl md:text-5xl font-black mb-2">${story.title}</h1>
+        <p class="text-brand-50 text-lg">سورة ${story.surahName} - الآيات ${story.startAyah} إلى ${story.endAyah}</p>
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-sm">${story.pages.length} صفحة</span>
+          <span class="bg-white/20 backdrop-blur px-3 py-1 rounded-full text-sm">${({story:'قصة قرآنية',explain:'شرح مصور',sequential:'عرض متسلسل'})[story.type]}</span>
+          <span class="bg-gold-400 text-brand-900 px-3 py-1 rounded-full text-sm font-bold">${new Date(story.createdAt).toLocaleDateString('ar-EG')}</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-brand-100 mb-6">
+        <div class="flex flex-wrap gap-2">
+          <button onclick="downloadAllPages()" class="btn-primary px-4 py-2 rounded-lg text-white font-semibold text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+            تحميل جميع الصور
+          </button>
+          <button onclick="publishStory()" class="btn-secondary px-4 py-2 rounded-lg text-white font-semibold text-sm">نشر</button>
+          <button onclick="deleteStory('${story.id}')" class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-white font-semibold text-sm">حذف</button>
+          <div class="flex-1"></div>
+          <span class="px-3 py-2 rounded-lg bg-brand-50 text-brand-700 text-sm font-semibold">
+            الحالة: ${({draft:'مسودة',review:'قيد المراجعة',approved:'مقبول',published:'منشور'})[story.status]}
+          </span>
+        </div>
+      </div>
+
+      <!-- Pages -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        ${story.pages.map((p, i) => renderPageCard(p, i)).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderPageCard(page, idx) {
+  if (page.type === 'cover') {
+    return `
+      <div class="md:col-span-2 lg:col-span-3 page-preview rounded-2xl overflow-hidden shadow-xl">
+        <div class="relative">
+          <img src="${page.imageUrl}" alt="غلاف" class="w-full">
+          <div class="absolute top-4 right-4 bg-gold-400 text-brand-900 px-3 py-1 rounded-full text-sm font-bold">الغلاف</div>
+        </div>
+      </div>
+    `;
+  }
+  return `
+    <div class="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition border border-brand-100">
+      <div class="relative">
+        <img src="${page.imageUrl}" alt="صفحة ${page.pageNumber}" class="w-full">
+        <div class="absolute top-2 right-2 bg-brand-500 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm">${page.pageNumber}</div>
+      </div>
+      <div class="p-4">
+        <h3 class="font-bold text-brand-800 mb-1">${page.sceneTitle}</h3>
+        <p class="text-xs text-gray-500 mb-2">الآية ${page.ayahNumber}</p>
+        <p class="text-sm text-gray-700 leading-relaxed line-clamp-2">${page.explanation}</p>
+        <div class="flex gap-2 mt-3">
+          <button onclick="downloadPage('${state.currentStory.id}', ${idx})" class="flex-1 btn-primary px-3 py-1.5 rounded-lg text-white text-xs font-semibold">تحميل</button>
+          <button onclick="viewPage('${state.currentStory.id}', ${idx})" class="flex-1 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg text-gray-700 text-xs font-semibold">عرض</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function downloadPage(storyId, pageIdx) {
+  const story = state.stories.find(s => s.id === storyId);
+  if (!story) return;
+  const page = story.pages[pageIdx];
+  const link = document.createElement('a');
+  link.download = `${story.surahName}_${page.type === 'cover' ? 'cover' : 'page_' + page.pageNumber}.png`;
+  link.href = page.imageUrl;
+  link.click();
+  showToast('تم تحميل الصورة', 'success');
+}
+
+function downloadAllPages() {
+  const story = state.currentStory;
+  if (!story) return;
+  story.pages.forEach((p, i) => {
+    setTimeout(() => {
+      const link = document.createElement('a');
+      link.download = `${story.surahName}_${p.type === 'cover' ? 'cover' : 'page_' + p.pageNumber}.png`;
+      link.href = p.imageUrl;
+      link.click();
+    }, i * 300);
+  });
+  showToast(`جاري تحميل ${story.pages.length} صورة...`, 'success');
+}
+
+function viewPage(storyId, pageIdx) {
+  const story = state.stories.find(s => s.id === storyId);
+  if (!story) return;
+  const page = story.pages[pageIdx];
+  showModal(`
+    <div class="max-w-3xl w-full">
+      <img src="${page.imageUrl}" class="w-full rounded-2xl">
+      <div class="mt-4 bg-white rounded-2xl p-6">
+        <h3 class="font-bold text-xl text-brand-800 mb-2">${page.sceneTitle}</h3>
+        <div class="quran-text text-center mb-4 bg-brand-50 p-4 rounded-xl">${page.quranText} ﴿${page.ayahNumber}﴾</div>
+        <div class="mb-3">
+          <h4 class="font-bold text-brand-700 mb-1">📚 شرح للأطفال:</h4>
+          <p class="text-gray-700 leading-relaxed">${page.explanation}</p>
+        </div>
+        <div>
+          <h4 class="font-bold text-brand-700 mb-1">💡 ماذا نتعلم؟</h4>
+          <p class="text-gray-700 leading-relaxed">${page.lesson}</p>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function publishStory() {
+  const story = state.currentStory;
+  if (!story) return;
+  story.status = 'published';
+  localStorage.setItem('quranStories', JSON.stringify(state.stories));
+  render();
+  showToast('تم نشر القصة', 'success');
+}
+
+function deleteStory(id) {
+  if (!confirm('هل تريد حذف هذه القصة؟')) return;
+  state.stories = state.stories.filter(s => s.id !== id);
+  localStorage.setItem('quranStories', JSON.stringify(state.stories));
+  navigate('library');
+  showToast('تم حذف القصة', 'success');
+}
+
+/* =========================================================
+   LIBRARY VIEW
+   ========================================================= */
+function renderLibrary() {
+  const stories = state.stories;
+  const categories = [
+    {v: 'all', t: 'الكل'},
+    {v: 'story', t: 'قصص قرآنية'},
+    {v: 'explain', t: 'شرح مصور'},
+    {v: 'sequential', t: 'عرض متسلسل'}
+  ];
+  
+  return `
+    <section class="fade-in">
+      <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
+        <div>
+          <h1 class="text-3xl md:text-4xl font-black text-brand-800 mb-2">مكتبة القصص</h1>
+          <p class="text-gray-600">${stories.length} محتوى محفوظ</p>
+        </div>
+        <button onclick="navigate('create')" class="btn-primary px-5 py-3 rounded-xl text-white font-bold flex items-center gap-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          إنشاء جديد
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl p-4 shadow-sm border border-brand-100 mb-6">
+        <div class="flex flex-wrap gap-2">
+          ${categories.map((c, i) => `
+            <button onclick="filterLibrary('${c.v}')" class="lib-filter px-4 py-2 rounded-lg text-sm font-semibold ${i===0?'tab-active':'text-gray-600 hover:bg-gray-100'}" data-filter="${c.v}">${c.t}</button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div id="libraryGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        ${stories.length === 0 ? `
+          <div class="col-span-full text-center py-16">
+            <div class="text-6xl mb-4">📚</div>
+            <h3 class="text-xl font-bold text-gray-700 mb-2">المكتبة فارغة</h3>
+            <p class="text-gray-500 mb-4">ابدأ بإنشاء أول قصة قرآنية مصورة</p>
+            <button onclick="navigate('create')" class="btn-primary px-6 py-3 rounded-xl text-white font-bold">إنشاء قصة</button>
+          </div>
+        ` : stories.map(s => renderLibraryCard(s)).join('')}
+      </div>
+    </section>
+  `;
+}
+
+function renderLibraryCard(story) {
+  const cover = story.pages.find(p => p.type === 'cover');
+  return `
+    <div onclick="openStory('${story.id}')" class="card-hover bg-white rounded-2xl overflow-hidden shadow-md cursor-pointer border border-brand-100">
+      <div class="relative aspect-[3/4] bg-gradient-to-br from-brand-100 to-sky-brand-100">
+        ${cover ? `<img src="${cover.imageUrl}" class="w-full h-full object-cover">` : '<div class="w-full h-full flex items-center justify-center text-6xl">📖</div>'}
+        <div class="absolute top-2 right-2 bg-brand-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+          ${story.pages.length} ص
+        </div>
+        <div class="absolute bottom-2 left-2 bg-white/90 backdrop-blur px-2 py-1 rounded text-xs font-semibold text-brand-700">
+          ${({draft:'مسودة',review:'قيد المراجعة',approved:'مقبول',published:'منشور'})[story.status]}
+        </div>
+      </div>
+      <div class="p-4">
+        <h3 class="font-bold text-brand-800 mb-1 line-clamp-1">${story.title}</h3>
+        <p class="text-sm text-gray-600 mb-2">سورة ${story.surahName} • ${story.startAyah}-${story.endAyah}</p>
+        <div class="flex items-center justify-between text-xs text-gray-500">
+          <span>${new Date(story.createdAt).toLocaleDateString('ar-EG')}</span>
+          <span class="badge bg-brand-100 text-brand-700">${({story:'قصة',explain:'شرح',sequential:'متسلسل'})[story.type]}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openStory(id) {
+  state.currentStory = state.stories.find(s => s.id === id);
+  navigate('story');
+}
+
+function filterLibrary(filter) {
+  document.querySelectorAll('.lib-filter').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-gray-600');
+  });
+  event.target.classList.add('tab-active');
+  event.target.classList.remove('text-gray-600');
+  
+  const filtered = filter === 'all' ? state.stories : state.stories.filter(s => s.type === filter);
+  const grid = document.getElementById('libraryGrid');
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="col-span-full text-center py-16 text-gray-500">لا توجد نتائج</div>';
+  } else {
+    grid.innerHTML = filtered.map(s => renderLibraryCard(s)).join('');
+  }
+}
+
+/* =========================================================
+   SEARCH VIEW
+   ========================================================= */
+function renderSearch() {
+  return `
+    <section class="fade-in">
+      <div class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-black text-brand-800 mb-2">البحث</h1>
+        <p class="text-gray-600">ابحث في السور والآيات والقصص</p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-6 shadow-sm border border-brand-100 mb-6">
+        <div class="relative">
+          <svg class="w-6 h-6 absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input id="globalSearch" oninput="performSearch()" type="text" placeholder="ابحث باسم السورة، رقم الآية، كلمة في النص، عنوان قصة..." class="w-full pr-12 pl-4 py-4 rounded-xl border-2 border-brand-200 focus:border-brand-500 text-lg" autofocus>
+        </div>
+        <div class="flex flex-wrap gap-2 mt-4">
+          <span class="text-sm text-gray-600">اقتراحات:</span>
+          ${['يوسف', 'الفاتحة', 'موسى', 'الجنة', 'البقرة'].map(t => `
+            <button onclick="document.getElementById('globalSearch').value='${t}'; performSearch()" class="px-3 py-1 rounded-full bg-brand-50 text-brand-700 text-sm hover:bg-brand-100">${t}</button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div id="searchResults"></div>
+    </section>
+  `;
+}
+
+async function performSearch() {
+  const q = document.getElementById('globalSearch').value.trim().toLowerCase();
+  const results = document.getElementById('searchResults');
+  if (!q) {
+    results.innerHTML = '';
+    return;
+  }
+  
+  results.innerHTML = '<div class="text-center py-10"><div class="loader mx-auto mb-3"></div><p class="text-gray-600">جاري البحث...</p></div>';
+  
+  const matches = {
+    surahs: SURAHS_META.filter(s => s.name.includes(q) || String(s.n) === q),
+    stories: state.stories.filter(s => 
+      s.title.toLowerCase().includes(q) ||
+      s.surahName.includes(q) ||
+      s.pages.some(p => p.explanation && p.explanation.includes(q))
+    )
+  };
+  
+  // Search in cached ayahs
+  const ayahMatches = [];
+  for (const surahNum in state.quranCache) {
+    const ayahs = state.quranCache[surahNum];
+    const found = ayahs.filter(a => a.text.includes(q) || String(a.numberInSurah) === q);
+    found.forEach(a => ayahMatches.push(a));
+  }
+  
+  let html = '';
+  
+  if (matches.surahs.length > 0) {
+    html += `
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-brand-100 mb-4">
+        <h3 class="font-bold text-lg text-brand-800 mb-3">📖 السور (${matches.surahs.length})</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+          ${matches.surahs.slice(0, 8).map(s => `
+            <button onclick="openSurah(${s.n})" class="p-3 rounded-xl border-2 border-brand-200 hover:border-brand-500 hover:bg-brand-50 text-center transition">
+              <div class="text-lg font-black text-brand-700">${s.n}</div>
+              <div class="text-sm font-semibold">${s.name}</div>
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  if (ayahMatches.length > 0) {
+    html += `
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-brand-100 mb-4">
+        <h3 class="font-bold text-lg text-brand-800 mb-3">🕌 الآيات (${ayahMatches.length})</h3>
+        <div class="space-y-3 max-h-96 overflow-y-auto scroll-hide">
+          ${ayahMatches.slice(0, 10).map(a => `
+            <div class="p-3 rounded-xl bg-brand-50 border border-brand-100">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-brand-700">سورة ${SURAHS_META.find(s=>s.n===a.surahNumber).name} - آية ${a.numberInSurah}</span>
+                <button onclick="openSurah(${a.surahNumber})" class="text-xs text-brand-600 hover:underline">فتح السورة ←</button>
+              </div>
+              <p class="quran-text text-right text-base leading-loose">${a.text}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  if (matches.stories.length > 0) {
+    html += `
+      <div class="bg-white rounded-2xl p-5 shadow-sm border border-brand-100 mb-4">
+        <h3 class="font-bold text-lg text-brand-800 mb-3">📚 القصص (${matches.stories.length})</h3>
+        <div class="grid sm:grid-cols-2 gap-3">
+          ${matches.stories.slice(0, 6).map(s => renderLibraryCard(s)).join('')}
+        </div>
+      </div>
+    `;
+  }
+  
+  if (!html) {
+    html = '<div class="text-center py-16"><div class="text-6xl mb-4">🔍</div><h3 class="text-xl font-bold text-gray-700 mb-2">لا توجد نتائج</h3><p class="text-gray-500">جرب كلمات بحث مختلفة</p></div>';
+  }
+  
+  results.innerHTML = html;
+}
+
+/* =========================================================
+   ADMIN VIEW
+   ========================================================= */
+function renderAdmin() {
+  const stats = {
+    stories: state.stories.length,
+    pages: state.stories.reduce((s, x) => s + x.pages.length, 0),
+    published: state.stories.filter(s => s.status === 'published').length,
+    draft: state.stories.filter(s => s.status === 'draft').length,
+    surahs: 114,
+    ayahs: 6236
+  };
+  
+  return `
+    <section class="fade-in">
+      <div class="mb-6">
+        <h1 class="text-3xl md:text-4xl font-black text-brand-800 mb-2">لوحة الإدارة</h1>
+        <p class="text-gray-600">إحصائيات وإدارة المحتوى</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        ${[
+          {n: stats.stories, l: 'قصة', i: '📚', c: 'from-brand-500 to-brand-700'},
+          {n: stats.pages, l: 'صفحة', i: '📄', c: 'from-sky-brand-500 to-sky-brand-700'},
+          {n: stats.published, l: 'منشور', i: '✅', c: 'from-green-500 to-emerald-700'},
+          {n: stats.draft, l: 'مسودة', i: '📝', c: 'from-gold-500 to-gold-600'}
+        ].map(s => `
+          <div class="bg-gradient-to-br ${s.c} text-white rounded-2xl p-5 shadow-lg">
+            <div class="text-3xl mb-1">${s.i}</div>
+            <div class="text-3xl font-black">${s.n}</div>
+            <div class="text-sm opacity-90">${s.l}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- Tabs -->
+      <div class="bg-white rounded-2xl shadow-sm border border-brand-100 overflow-hidden">
+        <div class="flex border-b border-gray-200 overflow-x-auto scroll-hide">
+          ${[
+            {v: 'stories', t: 'القصص'},
+            {v: 'surahs', t: 'السور'},
+            {v: 'data', t: 'البيانات'},
+            {v: 'users', t: 'المستخدمون'},
+            {v: 'settings', t: 'الإعدادات'}
+          ].map((t, i) => `
+            <button onclick="switchAdminTab('${t.v}')" class="admin-tab px-6 py-4 font-semibold whitespace-nowrap ${i===0?'tab-active':'text-gray-600 hover:bg-gray-50'}" data-tab="${t.v}">${t.t}</button>
+          `).join('')}
+        </div>
+        <div id="adminContent" class="p-6">
+          ${renderAdminStories()}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function switchAdminTab(tab) {
+  document.querySelectorAll('.admin-tab').forEach(b => {
+    b.classList.remove('tab-active');
+    b.classList.add('text-gray-600');
+  });
+  event.target.classList.add('tab-active');
+  event.target.classList.remove('text-gray-600');
+  
+  const content = document.getElementById('adminContent');
+  switch (tab) {
+    case 'stories': content.innerHTML = renderAdminStories(); break;
+    case 'surahs': content.innerHTML = renderAdminSurahs(); break;
+    case 'data': content.innerHTML = renderAdminData(); break;
+    case 'users': content.innerHTML = renderAdminUsers(); break;
+    case 'settings': content.innerHTML = renderAdminSettings(); break;
+  }
+}
+
+function renderAdminStories() {
+  if (state.stories.length === 0) {
+    return '<div class="text-center py-10 text-gray-500">لا توجد قصص</div>';
+  }
+  return `
+    <div class="overflow-x-auto">
+      <table class="w-full text-right">
+        <thead>
+          <tr class="bg-brand-50 text-brand-800">
+            <th class="p-3 rounded-r-lg">العنوان</th>
+            <th class="p-3">السورة</th>
+            <th class="p-3">الآيات</th>
+            <th class="p-3">النوع</th>
+            <th class="p-3">الصفحات</th>
+            <th class="p-3">الحالة</th>
+            <th class="p-3 rounded-l-lg">إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${state.stories.map(s => `
+            <tr class="border-b border-gray-100 hover:bg-gray-50">
+              <td class="p-3 font-semibold">${s.title}</td>
+              <td class="p-3">${s.surahName}</td>
+              <td class="p-3">${s.startAyah}-${s.endAyah}</td>
+              <td class="p-3">${({story:'قصة',explain:'شرح',sequential:'متسلسل'})[s.type]}</td>
+              <td class="p-3">${s.pages.length}</td>
+              <td class="p-3"><span class="badge ${s.status==='published'?'bg-green-100 text-green-700':'bg-yellow-100 text-yellow-700'}">${({draft:'مسودة',published:'منشور',review:'مراجعة',approved:'مقبول'})[s.status]}</span></td>
+              <td class="p-3">
+                <div class="flex gap-1">
+                  <button onclick="openStory('${s.id}')" class="px-2 py-1 rounded bg-brand-100 text-brand-700 text-xs hover:bg-brand-200">عرض</button>
+                  <button onclick="deleteStory('${s.id}')" class="px-2 py-1 rounded bg-red-100 text-red-700 text-xs hover:bg-red-200">حذف</button>
                 </div>
-            `
-            
-            document.getElementById('home-section').classList.add('hidden')
-            document.getElementById('surahs-section').classList.add('hidden')
-            document.getElementById('library-section').classList.add('hidden')
-            
-            const container = document.createElement('div')
-            container.id = 'story-view'
-            container.innerHTML = storyHTML
-            document.querySelector('.max-w-screen-xl').appendChild(container)
-        }
-        
-        function createStoryPages(surah, start, end, isStory) {
-            let html = ''
-            const totalPages = Math.min(end - start + 1, 6)
-            
-            for (let i = 0; i < totalPages; i++) {
-                const ayahNum = start + i
-                html += `
-                    <div class="story-page bg-white border rounded-3xl overflow-hidden">
-                        <div class="illustration h-64 flex items-center justify-center relative">
-                            <div class="text-center z-10">
-                                <div class="mx-auto w-20 h-20 bg-white/90 rounded-full flex items-center justify-center mb-3">
-                                    <i class="fa-solid fa-${isStory ? 'book' : 'lightbulb'} text-3xl text-teal-700"></i>
-                                </div>
-                                <div class="text-xs px-4 py-1 bg-white/90 text-teal-700 rounded-full w-fit mx-auto font-bold">صفحة ${i + 1}</div>
-                            </div>
-                        </div>
-                        
-                        <div class="p-6">
-                            <div class="flex justify-between items-center mb-3">
-                                <div>
-                                    <span class="font-bold">${surah.name}</span>
-                                    <span class="text-xs text-teal-600"> - الآية ${ayahNum}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="quran-verse px-4 py-4 rounded-2xl mb-4 text-sm leading-relaxed quran-text">
-                                ﴿بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ﴾
-                            </div>
-                            
-                            <div class="mb-4">
-                                <div class="font-bold text-xs text-teal-700 mb-1">شرح للأطفال</div>
-                                <p class="text-sm text-slate-600">${isStory ? 'يروي لنا القرآن قصة جميلة عن...' : 'هذه الآية تُعلمنا أن...'}</p>
-                            </div>
-                            
-                            <div>
-                                <div class="font-bold text-xs text-teal-700 mb-1">ماذا نتعلم؟</div>
-                                <div class="text-xs bg-amber-50 text-amber-700 px-3 py-1 rounded-xl inline-block">الصبر والثقة بالله</div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            }
-            return html
-        }
-        
-        function showSurahsSection() {
-            document.getElementById('home-section').classList.add('hidden')
-            document.getElementById('surahs-section').classList.remove('hidden')
-            document.getElementById('library-section').classList.add('hidden')
-            
-            if (!document.getElementById('surahs-grid').hasChildNodes()) {
-                renderSurahs()
-            }
-        }
-        
-        function showLibrary() {
-            document.getElementById('home-section').classList.add('hidden')
-            document.getElementById('surahs-section').classList.add('hidden')
-            document.getElementById('library-section').classList.remove('hidden')
-            
-            renderLibrary()
-        }
-        
-        function renderLibrary() {
-            const container = document.getElementById('library-grid')
-            container.innerHTML = ''
-            
-            if (stories.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-3 text-center py-10">
-                        <div class="text-5xl mb-3 text-teal-200"><i class="fa-solid fa-book"></i></div>
-                        <p class="text-slate-400">لا توجد قصص بعد. ابدأ بإنشاء قصة جديدة!</p>
-                    </div>
-                `
-                return
-            }
-            
-            stories.forEach((story, index) => {
-                const el = document.createElement('div')
-                el.className = `bg-white border rounded-3xl overflow-hidden`
-                el.innerHTML = `
-                    <div class="h-40 bg-gradient-to-br from-teal-100 to-sky-100 flex items-center justify-center">
-                        <i class="fa-solid fa-book-open text-6xl text-teal-300"></i>
-                    </div>
-                    <div class="p-5">
-                        <div class="font-extrabold">${story.title}</div>
-                        <div class="text-xs text-teal-700 mt-0.5">${story.surah} • ${story.range}</div>
-                        
-                        <div class="flex items-center justify-between mt-4 text-xs">
-                            <div class="text-slate-400">${story.pages} صفحات</div>
-                            <button onclick="viewStory(${index})" class="font-bold text-teal-700">عرض</button>
-                        </div>
-                    </div>
-                `
-                container.appendChild(el)
-            })
-        }
-        
-        function viewStory(index) {
-            const story = stories[index]
-            document.getElementById('library-section').classList.add('hidden')
-            
-            const container = document.createElement('div')
-            container.id = 'story-view'
-            container.innerHTML = `
-                <div class="max-w-screen-xl mx-auto px-6 pt-8">
-                    <div class="mb-6 flex justify-between">
-                        <div>
-                            <h2 class="text-3xl font-extrabold">${story.title}</h2>
-                            <p class="text-teal-600">${story.surah} • ${story.range}</p>
-                        </div>
-                        <button onclick="document.getElementById('story-view').remove(); showLibrary()" class="text-sm px-4 py-2">رجوع</button>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        ${createStoryPages({name: story.surah}, 1, 5, true)}
-                    </div>
-                </div>
-            `
-            document.querySelector('.max-w-screen-xl').appendChild(container)
-        }
-        
-        function downloadAllPages() {
-            alert('جاري تحميل جميع الصور كملف ZIP...')
-        }
-        
-        function showCreateModal() {
-            const modalHTML = `
-                <div id="create-modal" onclick="this.remove()" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                    <div onclick="event.stopImmediatePropagation()" class="bg-white w-full max-w-lg mx-4 rounded-3xl p-7">
-                        <h3 class="font-extrabold text-2xl mb-6">إنشاء قصة جديدة</h3>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs mb-1 text-slate-500">اختر السورة</label>
-                                <select id="modal-surah-select" class="w-full border px-4 py-3 rounded-2xl">
-                                    ${surahs.map(s => `<option value="${s.id}">${s.number}. ${s.name}</option>`).join('')}
-                                </select>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs mb-1 text-slate-500">من الآية</label>
-                                    <input type="number" id="modal-start" value="1" class="w-full border px-4 py-3 rounded-2xl">
-                                </div>
-                                <div>
-                                    <label class="block text-xs mb-1 text-slate-500">إلى الآية</label>
-                                    <input type="number" id="modal-end" value="10" class="w-full border px-4 py-3 rounded-2xl">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-xs mb-1 text-slate-500">نوع المحتوى</label>
-                                <div class="flex gap-2">
-                                    <div class="flex-1 border px-4 py-3 rounded-2xl text-center cursor-pointer hover:border-teal-300" onclick="this.classList.toggle('border-teal-700')">
-                                        قصة مصورة
-                                    </div>
-                                    <div class="flex-1 border px-4 py-3 rounded-2xl text-center cursor-pointer hover:border-teal-300" onclick="this.classList.toggle('border-teal-700')">
-                                        شرح مصور
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button onclick="startNewCreation(this)" class="w-full py-3.5 bg-teal-700 text-white rounded-2xl font-bold">إنشاء الصفحات</button>
-                        </div>
-                    </div>
-                </div>
-            `
-            document.body.insertAdjacentHTML('beforeend', modalHTML)
-        }
-        
-        function startNewCreation(btn) {
-            const modal = btn.closest('#create-modal')
-            const surahId = parseInt(document.getElementById('modal-surah-select').value)
-            const surah = surahs.find(s => s.id === surahId)
-            const start = parseInt(document.getElementById('modal-start').value)
-            const end = parseInt(document.getElementById('modal-end').value)
-            
-            modal.remove()
-            
-            // Add to library
-            stories.push({
-                title: `قصة ${surah.name}`,
-                surah: surah.name,
-                range: `${start}-${end}`,
-                pages: end - start + 1,
-                date: new Date().toLocaleDateString('ar-EG')
-            })
-            
-            showCreationProgress(surah, start, end, 'story')
-        }
-        
-        function toggleKidsMode() {
-            const btn = document.getElementById('kids-mode-btn')
-            btn.classList.toggle('bg-teal-700')
-            btn.classList.toggle('text-white')
-            
-            if (btn.classList.contains('bg-teal-700')) {
-                document.body.style.fontSize = '17px'
-            } else {
-                document.body.style.fontSize = '15px'
-            }
-        }
-        
-        function showAdminPanel() {
-            alert('لوحة الإدارة (خاصة بالمشرفين فقط)\n\nيتم عرض الإحصائيات وإدارة السور والقصص هنا.')
-        }
-        
-        function initializeApp() {
-            initializeTailwind()
-            
-            // Show home by default
-            document.getElementById('home-section').classList.remove('hidden')
-            
-            // Seed one example story
-            stories.push({
-                title: "قصة يوسف عليه السلام",
-                surah: "يوسف",
-                range: "1-20",
-                pages: 12,
-                date: "٢٠ يناير ٢٠٢٥"
-            })
-            
-            // Keyboard accessibility
-            document.addEventListener('keydown', function(e) {
-                if (e.key === "Escape") {
-                    const modals = document.querySelectorAll('#surah-modal, #progress-modal, #create-modal')
-                    modals.forEach(m => m.style.display = 'none' || m.remove())
-                }
-            })
-            
-            // Make sure surahs section is ready
-            console.log('%c[قصص القرآن] التطبيق جاهز - 114 سورة محملة', 'color:#0f766e')
-        }
-        
-        // Boot application
-        window.onload = initializeApp
-    </script>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderAdminSurahs() {
+  return `
+    <div class="mb-4">
+      <p class="text-sm text-gray-600">إجمالي السور: <strong>114</strong> • إجمالي الآيات: <strong>6,236</strong></p>
+    </div>
+    <div class="overflow-x-auto max-h-96 overflow-y-auto scroll-hide">
+      <table class="w-full text-right text-sm">
+        <thead class="sticky top-0 bg-white">
+          <tr class="bg-brand-50 text-brand-800">
+            <th class="p-2">الرقم</th>
+            <th class="p-2">الاسم</th>
+            <th class="p-2">الآيات</th>
+            <th class="p-2">النوع</th>
+            <th class="p-2">الحالة</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${SURAHS_META.map(s => `
+            <tr class="border-b border-gray-100 hover:bg-gray-50">
+              <td class="p-2 font-bold">${s.n}</td>
+              <td class="p-2 font-semibold">${s.name}</td>
+              <td class="p-2">${s.ayahs}</td>
+              <td class="p-2">${s.type}</td>
+              <td class="p-2"><span class="badge ${state.quranCache[s.n]?'bg-green-100 text-green-700':'bg-gray-100 text-gray-600'}">${state.quranCache[s.n]?'محمّل':'غير محمّل'}</span></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderAdminData() {
+  const cacheSize = Object.keys(state.quranCache).length;
+  return `
+    <div class="space-y-4">
+      <div class="bg-brand-50 rounded-xl p-4">
+        <h3 class="font-bold text-brand-800 mb-2">📊 حالة قاعدة البيانات</h3>
+        <div class="grid grid-cols-2 gap-3 text-sm">
+          <div>السور المحملة: <strong>${cacheSize} / 114</strong></div>
+          <div>إجمالي الآيات في الذاكرة: <strong>${Object.values(state.quranCache).reduce((s,a)=>s+a.length,0)}</strong></div>
+          <div>القصص المحفوظة: <strong>${state.stories.length}</strong></div>
+          <div>إجمالي الصفحات: <strong>${state.stories.reduce((s,x)=>s+x.pages.length,0)}</strong></div>
+        </div>
+      </div>
+      <div class="bg-sky-brand-50 rounded-xl p-4">
+        <h3 class="font-bold text-sky-brand-700 mb-2">🔌 مصدر البيانات</h3>
+        <p class="text-sm text-gray-700">يتم جلب النص القرآني من <strong>alquran.cloud API</strong> الموثوق، المبني على مصحف المدينة النبوية.</p>
+        <p class="text-xs text-gray-500 mt-2">كل آية يتم التحقق منها قبل الاستخدام (السورة، الرقم، النص، الترتيب).</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="clearCache()" class="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 font-semibold text-sm">مسح الذاكرة المؤقتة</button>
+        <button onclick="clearAllData()" class="px-4 py-2 rounded-lg bg-red-500 text-white hover:bg-red-600 font-semibold text-sm">حذف جميع البيانات</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminUsers() {
+  return `
+    <div class="text-center py-10">
+      <div class="text-6xl mb-4">👥</div>
+      <h3 class="text-xl font-bold text-gray-700 mb-2">إدارة المستخدمين</h3>
+      <p class="text-gray-500 mb-4">نظام المستخدمين والصلاحيات يتطلب خادم خلفي</p>
+      <div class="bg-brand-50 rounded-xl p-4 text-right max-w-md mx-auto">
+        <p class="text-sm text-gray-700"><strong>المستخدم الحالي:</strong> ${state.currentUser?.name || 'ضيف'}</p>
+        <p class="text-sm text-gray-700 mt-2"><strong>الصلاحيات المتاحة:</strong></p>
+        <ul class="text-xs text-gray-600 mt-2 space-y-1 list-disc list-inside">
+          <li>إنشاء القصص</li>
+          <li>عرض المكتبة</li>
+          <li>تحميل الصور</li>
+          <li>البحث في المحتوى</li>
+        </ul>
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminSettings() {
+  return `
+    <div class="space-y-4">
+      <div class="bg-white border border-gray-200 rounded-xl p-4">
+        <h3 class="font-bold text-brand-800 mb-3">⚙️ إعدادات عامة</h3>
+        <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <span class="text-sm">المراجعة قبل النشر</span>
+          <input type="checkbox" class="w-5 h-5 accent-brand-500">
+        </label>
+        <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <span class="text-sm">وضع الأطفال افتراضيًا</span>
+          <input type="checkbox" class="w-5 h-5 accent-brand-500" ${state.kidsMode?'checked':''} onchange="toggleKidsMode()">
+        </label>
+        <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <span class="text-sm">جودة الصور العالية</span>
+          <input type="checkbox" class="w-5 h-5 accent-brand-500" checked>
+        </label>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl p-4">
+        <h3 class="font-bold text-brand-800 mb-3">🎨 الأنماط الافتراضية</h3>
+        <select class="w-full px-4 py-2 rounded-lg border border-gray-200">
+          <option>كرتوني تربوي</option>
+          <option>ألوان مائية</option>
+          <option>كتاب قصص</option>
+          <option>رسوم أطفال</option>
+        </select>
+      </div>
+    </div>
+  `;
+}
+
+function clearCache() {
+  if (!confirm('مسح الذاكرة المؤقتة للآيات؟')) return;
+  state.quranCache = {};
+  showToast('تم مسح الذاكرة المؤقتة', 'success');
+  render();
+}
+
+function clearAllData() {
+  if (!confirm('حذف جميع البيانات؟ لا يمكن التراجع!')) return;
+  state.stories = [];
+  state.quranCache = {};
+  localStorage.removeItem('quranStories');
+  showToast('تم حذف جميع البيانات', 'success');
+  render();
+}
+
+/* =========================================================
+   MODAL & TOAST
+   ========================================================= */
+function showModal(content) {
+  const container = document.getElementById('modalContainer');
+  container.innerHTML = `
+    <div class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 fade-in" onclick="if(event.target===this)closeModal()">
+      <div class="relative max-h-[90vh] overflow-y-auto scroll-hide">
+        <button onclick="closeModal()" class="absolute top-2 left-2 z-10 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg">
+          <svg class="w-5 h-5 text-gray-700" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+        ${content}
+      </div>
+    </div>
+  `;
+}
+
+function closeModal() {
+  document.getElementById('modalContainer').innerHTML = '';
+}
+
+function renderCreationProgress() {
+  return `
+    <div class="bg-white rounded-3xl p-8 max-w-md w-full text-center">
+      <div class="loader mx-auto mb-4"></div>
+      <h3 class="text-xl font-bold text-brand-800 mb-2">جاري الإنشاء...</h3>
+      <p id="progressText" class="text-gray-600 mb-6">جاري قراءة الآيات...</p>
+      <div class="bg-brand-50 rounded-xl p-4 text-right">
+        <div id="progressSteps" class="space-y-2 text-sm">
+          ${[
+            'قراءة الآيات',
+            'التحقق من النص',
+            'تحليل الآيات',
+            'تحديد الأحداث',
+            'تقسيم المشاهد',
+            'إنشاء الرسومات',
+            'تجهيز النصوص',
+            'تركيب الصفحات'
+          ].map((s, i) => `
+            <div class="flex items-center gap-2 progress-item" data-idx="${i}">
+              <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-500">${i+1}</div>
+              <span class="text-gray-500">${s}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function updateProgressStep(idx, text) {
+  const progressText = document.getElementById('progressText');
+  if (progressText) progressText.textContent = text;
+  
+  const items = document.querySelectorAll('.progress-item');
+  items.forEach((item, i) => {
+    const circle = item.querySelector('div');
+    const label = item.querySelector('span');
+    if (i < idx) {
+      circle.className = 'w-6 h-6 rounded-full bg-brand-500 flex items-center justify-center text-xs text-white';
+      circle.textContent = '✓';
+      label.className = 'text-brand-700 font-semibold';
+    } else if (i === idx) {
+      circle.className = 'w-6 h-6 rounded-full bg-gold-400 flex items-center justify-center text-xs text-white pulse-ring';
+      label.className = 'text-brand-800 font-bold';
+    }
+  });
+}
+
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toastContainer');
+  const colors = {
+    success: 'bg-brand-500',
+    error: 'bg-red-500',
+    info: 'bg-sky-brand-500'
+  };
+  const icons = {
+    success: '✓',
+    error: '✕',
+    info: 'ℹ'
+  };
+  const toast = document.createElement('div');
+  toast.className = `${colors[type]} text-white px-5 py-3 rounded-xl shadow-lg flex items-center gap-3 slide-up min-w-[250px]`;
+  toast.innerHTML = `
+    <div class="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center font-bold">${icons[type]}</div>
+    <span class="font-semibold">${message}</span>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(-20px)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* =========================================================
+   INIT
+   ========================================================= */
+window.addEventListener('DOMContentLoaded', () => {
+  render();
+  // Preload some popular surahs in background
+  setTimeout(() => {
+    fetchSurahAyahs(1); // Al-Fatiha
+    fetchSurahAyahs(112); // Al-Ikhlas
+    fetchSurahAyahs(113); // Al-Falaq
+    fetchSurahAyahs(114); // An-Nas
+  }, 2000);
+});
+</script>
+
 </body>
 </html>
